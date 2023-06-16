@@ -50,5 +50,9 @@
 Протокол кофейного напитка
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/a04845ff-e944-417e-9c2e-4f34a012ccc8)
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/c72aaee5-8630-458e-9adf-b1c1255909a1)
-  
+
+
+Протокол системных сенсоров
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/c24d8cdc-02ed-44eb-8b4b-5dc1f468412b)
+
 </details>
