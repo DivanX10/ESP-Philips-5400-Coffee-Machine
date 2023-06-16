@@ -150,10 +150,14 @@ philips_series_5400:
 
 Готовую модель и распечатать на 3д принтере можете [здесь](https://www.thingiverse.com/thing:6073849)
 Используется сервопривод MG90S Micro Servo 180 градусов. Его вполне достаточно для отвода воды и питаем от +3,3в
-  
+
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/83049519-c43c-49c5-9dbd-efd0e50cd8b5)  
 ![1686944891270](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/7693a751-1384-45fa-920c-80e4a3068965)
 ![Кофемашина  Отвод воды  2](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/66b4962b-279b-42ad-898c-5cd0746327c4)
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/64a4c84c-da2f-4f18-92f5-4d0fad063731)
+
+
+
 
   
 </details>
