@@ -416,11 +416,6 @@ sensor:
         - script.execute: script_servo
         - script.execute: record_servo_position
 
-#  - platform: template
-#    name: MessageTest
-#    id: idMessageTest
-
-
 #####################################################################################
 ################################## Выключатель ######################################
 switch:
