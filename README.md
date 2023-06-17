@@ -1,5 +1,8 @@
 # ESP-Philips-5400-Coffee-Machine
 
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/f02ec71a-77c2-404a-8de0-11d420113446)
+
+
 Модификация и удаленное управление кофемашиной Philips 5400. Управление реализовано средствами ESPHome. За основу был взят код с проекта [ESPHome-Philips-Smart-Coffee](https://github.com/TillFleisch/ESPHome-Philips-Smart-Coffee#esphome-smart-coffee-philips-series-2200) и переделан под Philips 5400. Проект будет дорабатываться и дополняться новыми сведениями. Вы можете принять участие в развитии проекта, например написать код для имитации счетчика чтобы можно было готовить кофе много раз, а не один раз после включения. Можете переписать компонент Philips 5400 и довести до ума.
 
 > Важно!
