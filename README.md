@@ -171,7 +171,9 @@ philips_series_5400:
 
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/04f8501a-e74d-45f7-926c-012d7e0556a4)
 
+
 Протокол счетчика кофейных напитков. Это важная часть, без него не будет срабатывать приготовление кофейных напитков удаленно
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/c862e785-2448-4651-b441-472ab3a8edd3)
 
 
 
