@@ -172,11 +172,16 @@ AA:AA:AA:90 - протокол кофейных напитков
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/04f8501a-e74d-45f7-926c-012d7e0556a4)
 
 AA:AA:AA:91 - протокол счетчика кофейных напитков. Это важная часть, без него не будет срабатывать приготовление кофейных напитков удаленно
+
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/c862e785-2448-4651-b441-472ab3a8edd3)
 
 AA:AA:AA:B0 - протокол системных сенсоров: контейнер кофейной гущи, воды, поддона, анличие зерна, статусы приготовления кофе, статусы заварного блока
+
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/d5a13590-ed1f-485b-895f-d09f0bba9efc)
 
+AA:AA:AA:B5 - протокол счетчика кофейных напитков. Считает в секундах объем налитого кофе и молока
+
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/db3e16f0-f321-4857-acc7-f7ade6bc8b76)
 
 
 </details>
