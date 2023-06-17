@@ -70,7 +70,8 @@ philips_series_5400:
 5) Калибровка отвода воды, указываете положение сервы в начальной и конечной позиции
 6) Кофейные напитки
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/0b054297-b94d-4304-a360-8a7bfcfd6579)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/3407d4f8-8e15-43f8-8747-89d7cd9d7ea0)
+
 
 ***
 
