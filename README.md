@@ -30,60 +30,6 @@
 
 ***
 
-Добавление компонета Philips 5400 в ESPHome. 
-
-```
-external_components:
-  - source:
-      type: git
-      url: https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine
-
-
-philips_series_5400:
-  display_uart: uart_display
-  mainboard_uart: uart_mainboard
-  id: philip
-```
-
-При желании можно подключить компонент локально. Скачайте файлы в папку \esphome\components\ 
-
-```
-external_components:
-  - source:
-      type: local
-      path: components
-    components: [philips_series_5400]
-
-
-philips_series_5400:
-  display_uart: uart_display
-  mainboard_uart: uart_mainboard
-  id: philip
-```
-
-Варианты кода можете посмотреть [здесь](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config) 
-
-Что в коде реализовано?
-1) Включить и выключить кофемашину
-2) Сенсоры
-    * Контейнер гущи переполнен или пустой
-    * Контейнер с водой пустой или полон
-    * Поддон извлечен или на месте
-    * Кофемашина включена или выключен
-    * Статусы кофемашины
-    * Служебные сенсоры, такие как отображение байтов для приготовления кофейных напитков
-    * Сенсор положения сервопривода
-      
-3) Открыть и закрыть носик вручную. Если не планируется наливать кофе автоматически по утрам 
-4) Открывать и закрывать носик автоматически. Если планируется наливать кофе автоматически по утрам
-5) Калибровка отвода воды, указываете положение сервы в начальной и конечной позиции
-6) Кофейные напитки
-
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/3407d4f8-8e15-43f8-8747-89d7cd9d7ea0)
-
-
-***
-
 <details>
   <summary>Снимаем панель управления и встраиваем ESP</summary>
   
@@ -236,6 +182,103 @@ philips_series_5400:
 
 
 
- 
 </details>
 
+***
+
+Варианты кода можете посмотреть [здесь](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config) 
+
+Что в коде реализовано?
+1) Включить и выключить кофемашину
+2) Сенсоры
+    * Контейнер гущи переполнен или пустой
+    * Контейнер с водой пустой или полон
+    * Поддон извлечен или на месте
+    * Кофемашина включена или выключен
+    * Статусы кофемашины
+    * Служебные сенсоры, такие как отображение байтов для приготовления кофейных напитков
+    * Сенсор положения сервопривода
+      
+3) Открыть и закрыть носик вручную. Если не планируется наливать кофе автоматически по утрам 
+4) Открывать и закрывать носик автоматически. Если планируется наливать кофе автоматически по утрам
+5) Калибровка отвода воды, указываете положение сервы в начальной и конечной позиции
+6) Кофейные напитки
+
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/3407d4f8-8e15-43f8-8747-89d7cd9d7ea0)
+
+Добавление компонета Philips 5400 в ESPHome. 
+
+```
+external_components:
+  - source:
+      type: git
+      url: https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine
+
+
+philips_series_5400:
+  display_uart: uart_display
+  mainboard_uart: uart_mainboard
+  id: philip
+```
+
+При желании можно подключить компонент локально. Скачайте файлы в папку \esphome\components\ 
+
+```
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [philips_series_5400]
+
+
+philips_series_5400:
+  display_uart: uart_display
+  mainboard_uart: uart_mainboard
+  id: philip
+```
+
+Пример команды для отправки приготовления кофе. Вы можете создавать любые рецепты используя таблицу [протокола кофейных напитков](![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/24080013-0eb7-4a34-a7a3-d5255d4bd245)
+
+Меняем только протокол с сообщением 0x90, а именно 0x0A, 0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00 на другое
+)
+
+```
+button:
+  - platform: template
+    name: "Кофе Max 150ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x93, id(pack_counter)++, 0x01, 0x01};
+            id(philip)->send_packet(data, sizeof(data));
+          }
+          {
+            uint8_t data[]={0x90, id(pack_counter)++, 0x0A, 0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00};
+            id(philip)->send_packet(data, sizeof(data));
+          }
+          {
+            uint8_t data[]={0x91, id(pack_counter)++, 0x01, 0x03};
+            id(philip)->send_packet(data, sizeof(data));
+          }
+
+
+  - platform: template
+    name: "Кофе с молоком 120/120ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x93, id(pack_counter)++, 0x01, 0x01};
+            id(philip)->send_packet(data, sizeof(data));
+          }
+          {
+            uint8_t data[]={0x90, id(pack_counter)++, 0x0A, 0x02, 0x02, 0x00, 0x02, 0x01, 0x02, 0x78, 0x00, 0x78, 0x00};
+            id(philip)->send_packet(data, sizeof(data));
+          }
+          {
+            uint8_t data[]={0x91, id(pack_counter)++, 0x01, 0x03};
+            id(philip)->send_packet(data, sizeof(data));
+          }
+
+```
