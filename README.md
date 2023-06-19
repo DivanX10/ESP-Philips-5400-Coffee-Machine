@@ -102,17 +102,21 @@ philips_series_5400:
 
 > Подключаем по схеме на выбор, через реле или через оптопару. Сервопривод подключаем по желанию, он нужен для работы отвода воды от носика.
 
-Общая схема подключения без реле и оптопары. Просто подключение ESP32 к кофемашине
+### Общая схема подключения без реле и оптопары. Просто подключение ESP32 к кофемашине
 
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/9ad477de-6129-4215-9917-e703ad6a4bca)
 
+***
 
-Схема с подключением реле 5В (KY-019)
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/a08ea89c-9619-41c4-b76c-21c3b38398b4)
+### Схема с подключением реле 5В (KY-019)
 
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/e811a82b-6d1a-4296-99f5-1dbd8eed1db6)
 
-Схема с подключением оптопары PC817C
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/201a46dd-f403-4837-9bf1-bdd2e24656c3)
+***
+
+### Cхема с подключением оптопары PC817C
+
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/763ae916-f72b-4e73-8594-8057e6d1f804)
 
 
 </details>
