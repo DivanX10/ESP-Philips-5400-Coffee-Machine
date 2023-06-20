@@ -207,7 +207,7 @@
 
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/3407d4f8-8e15-43f8-8747-89d7cd9d7ea0)
 
-Добавление компонета Philips 5400 в ESPHome. 
+### Добавление компонета Philips 5400 в ESPHome. 
 
 ```
 external_components:
