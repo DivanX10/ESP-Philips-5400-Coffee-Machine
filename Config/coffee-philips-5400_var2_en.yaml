@@ -1,5 +1,5 @@
 #There are service sensors Message B0/B5/BA/90/91/93
-#Добавлены команды на приготовление рецептов
+#Added commands for cooking recipes, coffee can be prepared remotely many times
 #ERROR is enabled in debugging instead of DEBUG
 #Servo control (water drainage)
 #Added sensors: container of coffee grounds, water, tray, presence of grain, coffee preparation statuses, coffee machine status: off or on
