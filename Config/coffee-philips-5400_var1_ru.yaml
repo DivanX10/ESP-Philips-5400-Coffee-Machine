@@ -1,0 +1,330 @@
+#В этом варианте кода
+#Включено:
+#Сенсор статуса кофемашины: выключено, выбор напитка, наливаем кофе, молоко, наслаждайтесь и т.д
+#Сенсор контейнера для кофейной гущи
+#Сенсор контейнера для воды
+#Сенсор поддона
+#Выключатель для вкл/выкл кофемашины
+#Рецепты кофейных напитков
+
+#Удалено:
+#Убран код сервопривода для отвода воды
+#Убраны служебные сенсоры Message 93/Message 90/Message 91/Message B0/Message B5/Message BA
+
+#####################################################################################
+substitutions:
+  board_name: Coffee Philips 5400
+  node_name: coffee-philips-5400
+
+esphome:
+  name: ${node_name}
+  friendly_name: coffee-philips-5400
+  comment: ESP32 Coffee Philips 5400
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+
+#Учетные данные Wi-Fi для подключения платы к домашней сети
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: on
+  reboot_timeout: 10min
+
+#Если не будет связи с WiFi, то поднимется точка доступа
+  ap:
+    ssid: ESP SmartCoffeePhilips
+    password: !secret ap_esp_password
+
+#Компонент captive portal в ESPHome является резервным механизмом на случай сбоя подключения к настроенному Wi-Fi.
+captive_portal:
+
+#Веб сервер
+web_server:
+  port: 80
+
+#Журналирование
+logger:
+  level: DEBUG
+  baud_rate: 0
+
+#Enable OTA
+ota:
+  password: "esphome"
+
+#Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+
+#####################################################################################
+################################## Внешний компонент ################################
+external_components:
+  - source:
+      type: git
+      url: https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine
+
+#####################################################################################
+################################ Подключенный компонент #############################
+
+philips_series_5400:
+  display_uart: uart_display
+  mainboard_uart: uart_mainboard
+  id: philip
+
+#####################################################################################
+######################################### UART ######################################
+uart:
+#UART подключение к панели управления. Считываем данные которые приходят от материнской плате в панель управления
+ - id: uart_display
+   rx_pin: GPIO16 #Считываем данные с панели управления
+   tx_pin: GPIO17 #Посылаем данные в панель управления
+   baud_rate: 115200
+   stop_bits: 1
+   data_bits: 8
+   parity: NONE
+   rx_buffer_size: 256
+   debug:
+     direction: RX
+     dummy_receiver: false
+
+
+ - id: uart_mainboard
+   rx_pin: GPIO3 #Считываем данные с материнской платы
+   tx_pin: GPIO1 #Посылаем данные в материнскую плату
+   baud_rate: 115200
+   stop_bits: 1
+   data_bits: 8
+   parity: NONE
+   rx_buffer_size: 256
+   debug:
+     direction: RX
+     dummy_receiver: false
+     sequence: 
+      - lambda: |-
+          UARTDebug::log_hex(direction, bytes, ':');
+          //AA:AA:AA:B0
+          if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x06 && bytes[9]==0x00) { 
+            id(idWater).publish_state("Вода есть");
+            id(idPallet).publish_state("Вставлен");
+            id(idGrainTray).publish_state("Зерна есть");
+            id(idStatus).publish_state("Выберите напиток");
+            id(idCoffeeGroundsContainer).publish_state("Пустой");
+            }
+          //AA:AA:AA:B0 "Наличие кофейных зерен"
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x08 && bytes[7]==0x05) { id(idGrainTray).publish_state("Зерна закончились"); }
+
+          //AA:AA:AA:B0 "Вынули контейнер с водой"
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x0E && bytes[9]==0x40) { id(idWater).publish_state("Воды нет"); }
+
+          //AA:AA:AA:B0 "Вынули поддон"  
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x0E && bytes[9]==0x80) { id(idPallet).publish_state("Извлечен"); }
+
+          //AA:AA:AA:B0 "Контейнер с кофейной гущей заполнен"
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x0E && bytes[9]==0x00) { id(idCoffeeGroundsContainer).publish_state("Опорож. контейнер для коф. гущи"); }
+
+          //AA:AA:AA:B0 "Вынули поддон и контейнер с водой"
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x0E && bytes[9]==0xC0) { 
+            id(idWater).publish_state("Воды нет"); 
+            id(idPallet).publish_state("Извлечен");
+            }
+          
+          //AA:AA:AA:B0 "Статусы"
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x0C && bytes[7]==0x01) { id(idStatus).publish_state("Наслаждайтесь"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x0C && bytes[7]==0x02) { id(idStatus).publish_state("Что-то (07 0C 02)"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x01 && bytes[7]==0x00) { id(idStatus).publish_state("Что-то (07 01 00)"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x05 && bytes[7]==0x00) { id(idStatus).publish_state("Выключено"); } 
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x07 && bytes[7]==0x0E) { id(idStatus).publish_state("Нагрев воды"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x07 && bytes[7]==0x0D) { id(idStatus).publish_state("Перемалываем зерна"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x07 && bytes[7]==0x10) { id(idStatus).publish_state("Наливаем молоко"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x07 && bytes[7]==0x11) { id(idStatus).publish_state("Наливаем кофе"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x07 && bytes[7]==0x12) { id(idStatus).publish_state("Предварительное дозирование"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x07 && bytes[7]==0x13) { id(idStatus).publish_state("Создание пара для молока"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x07 && bytes[7]==0x14) { id(idStatus).publish_state("Заварочный узел в положение заваривания"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x07 && bytes[7]==0x15) { id(idStatus).publish_state("Наслаждайтесь"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x08 && bytes[7]==0x0E) { id(idStatus).publish_state("Нагревание"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x08 && bytes[7]==0x02) { id(idStatus).publish_state("Промывка"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB0 && bytes[5]==0x07 && bytes[6]==0x08 && bytes[7]==0x14) { id(idStatus).publish_state("Что-то (07 08 14)"); }
+
+          //AA:AA:AA:B5 "Error Code"
+          if (bytes[0]==0xAA && bytes[3]==0xB5 && bytes[5]==0x06 && bytes[10]==0x00 && bytes[11]==0x00) { id(idErrorCode).publish_state("00"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB5 && bytes[5]==0x06 && bytes[10]==0x00 && bytes[11]==0x0B) { id(idErrorCode).publish_state("0B"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB5 && bytes[5]==0x06 && bytes[10]==0x00 && bytes[11]==0xE6) { id(idErrorCode).publish_state("E6"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB5 && bytes[5]==0x06 && bytes[10]==0x00 && bytes[11]==0x80) { id(idErrorCode).publish_state("80"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB5 && bytes[5]==0x06 && bytes[10]==0x00 && bytes[11]==0xCB) { id(idErrorCode).publish_state("CB"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB5 && bytes[5]==0x06 &&& bytes[10]==0x00 & bytes[11]==0xFF) { id(idErrorCode).publish_state("FF"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB5 && bytes[5]==0x06 && bytes[10]==0x00 && bytes[11]==0xA0) { id(idErrorCode).publish_state("A0"); }
+
+          //AA:AA:AA:B5 "Статус 2"
+          else if (bytes[0]==0xAA && bytes[3]==0xB5 && bytes[5]==0x06 && bytes[10]==0x00) { id(idStatusUnknown2).publish_state("00"); }
+          else if (bytes[0]==0xAA && bytes[3]==0xB5 && bytes[5]==0x06 && bytes[10]==0x01) { id(idStatusUnknown2).publish_state("01"); }
+
+          //Если онаружились байты AA, то публиковать статус true в бинарный сенсор. Служит как дополнительный индикатор, что кофемашина включена
+          if (bytes[0]==0xAA) { id(idPowerStatus).publish_state(true); }
+          //else if (bytes[2]==0xAA && bytes[3]==0xFE && bytes[8]==0x1B && bytes[9]==0x40) { id(idPowerStatus).publish_state(false); }
+
+
+#####################################################################################
+################################### Текстовый сенсор ################################
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP
+
+  - platform: template
+    name: "Water"
+    icon: mdi:cup-water
+    id: idWater
+    update_interval: 60s
+
+  - platform: template
+    name: "Coffee Grounds Container"
+    icon: mdi:train-car-centerbeam-full
+    id: idCoffeeGroundsContainer
+    update_interval: 60s
+
+  - platform: template
+    name: "Coffee Pallet"
+    icon: mdi:spirit-level
+    id: idPallet
+    update_interval: 60s
+
+  - platform: template
+    name: "Error Code"
+    icon: mdi:alert-circle-outline
+    id: idErrorCode
+    update_interval: 60s
+
+  - platform: template
+    name: "Grain Tray"
+    icon: mdi:grain
+    id: idGrainTray
+    update_interval: 60s
+
+  - platform: template
+    name: "Status"
+    icon: mdi:coffee-to-go
+    id: idStatus
+    update_interval: 60s
+
+  - platform: template
+    id: idStatusUnknown2
+    name: "Статус 2"
+    update_interval: 60s
+
+
+#####################################################################################
+################################## Бинарный сенсор ##################################
+#Дополнительный сенсор статуса кофемашины: включена или выключена
+binary_sensor:
+  - platform: template
+    name: "Power Status"
+    id: idPowerStatus
+    lambda: |-
+      if (id(idPowerStatus).state) {
+        return true;
+      } else {
+        return false;
+      }
+
+
+#####################################################################################
+################################## Сенсор ###########################################
+sensor:
+#Сенсор уровня сигнала WiFi
+  - platform: wifi_signal
+    name: RSSI WiFi
+    icon: mdi:wifi
+    update_interval: 60s
+
+
+#####################################################################################
+################################## Выключатель ######################################
+switch:
+#Этот скрытый выключатель используется для управления реле. Для вкл/выкл кофемашины используются кнопки с таймером, которые вкл/выкл этот выключатель
+  - platform: gpio
+    pin: GPIO14
+    name: "Relay Switch"
+    id: idRelaySwitch
+    internal: True #Скрыть - true \показать - false
+    restore_mode: ALWAYS_OFF
+
+
+#####################################################################################
+####################################### Кнопка ######################################
+button:
+#Перезагрузка
+  - platform: restart
+    name: Restart
+    icon: mdi:restart
+
+#Включить кофемашину
+  - platform: template
+    name: "Power ON"
+    icon: mdi:power
+    on_press:
+     - switch.turn_on: idRelaySwitch
+     - delay: 1s
+     - switch.turn_off: idRelaySwitch
+
+#Выключить кофемашину. Когда нажимаем на сенсорную кнопку и быстро отпускаем, то кофемашина выключится без промывки. Если надо, чтобы кофемашина выключилась с #промывкой, то нужно держать палец на кнопке 2 секунды, поэтому имитируем нажатие в 2 секунды
+  - platform: template
+    name: "Power OFF"
+    icon: mdi:power
+    on_press:
+     - switch.turn_on: idRelaySwitch
+     - delay: 2s
+     - switch.turn_off: idRelaySwitch
+
+#####################################################################################
+############################ Рецепты приготовления кофе #############################
+#Примеры команд кофейных напитков
+
+#Напиток: Эспрессо. Зерно: Средний. Кофе: 55 мл. Порция: 1
+  - platform: template
+    name: "Эспрессо Medium 55ml"
+    icon: mdi:coffee
+    on_press:
+      - uart.write:
+          id: uart_mainboard
+          data: [0xAA, 0xAA, 0xAA, 0x93, 0x05, 0x01, 0x01, 0x6A, 0x52, 0x66, 0xE6, 0x55]
+      - uart.write:
+          id: uart_mainboard
+          data: [0xAA, 0xAA, 0xAA, 0x90, 0x06, 0x0A, 0x00, 0x01, 0x00, 0x02, 0x03, 0x00, 0x37, 0x00, 0x00, 0x00, 0xF7, 0x8F, 0x07, 0x7D, 0x55]
+      - uart.write:
+          id: uart_mainboard
+          data: [0xAA, 0xAA, 0xAA, 0x91, 0x07, 0x01, 0x03, 0xA3, 0x2F, 0xE5, 0xA1, 0x55]
+
+#Напиток: Эспрессо. Зерно: Extra Shot. Кофе: 70 мл. Порция: 1.
+  - platform: template
+    name: "Эспрессо ExtraShot 70ml"
+    icon: mdi:coffee
+    on_press:
+      - uart.write:
+          id: uart_mainboard
+          data: [0xAA, 0xAA, 0xAA, 0x93, 0x0C, 0x01, 0x01, 0xE5, 0x69, 0xB7, 0xE9, 0x55]
+      - uart.write:
+          id: uart_mainboard
+          data: [0xAA, 0xAA, 0xAA, 0x90, 0x0D, 0x0A, 0x00, 0x02, 0x02, 0x02, 0x03, 0x00, 0x46, 0x00, 0x00, 0x00, 0xB8, 0xD7, 0xBE, 0xA4, 0x55]
+      - uart.write:
+          id: uart_mainboard
+          data: [0xAA, 0xAA, 0xAA, 0x91, 0x0E, 0x01, 0x03, 0x2C, 0x14, 0x34, 0xAE, 0x55]
+
+
+#####################################################################################
+####################################### Время #######################################
+#В компонент время я добавил таймер, который будет триггерить каждую минуту, запуская публикацию для статуса false и скрипт. Зачем это нужно? Когда кофемашина #выключена, то байты переставют бегать и нечего будет отслеживать, не будет работать тогда бинарный сенсор и не увидим реальный стаус кофемашины вкл/выкл. Иногда основной сенсор показывает, что кофемашина выключена, а это как подстраховка. Если байты не бегают, то статус будет false, значит кофемашина выключена
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: Europe/Moscow
+    on_time:
+      - seconds: 59
+        then:
+          - lambda: |-
+              id(idPowerStatus).publish_state(false);
+          - script.execute: script_auto_water_drain
