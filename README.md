@@ -187,8 +187,6 @@
 
 ***
 
-Варианты кода можете посмотреть [здесь](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config) 
-
 Что в коде реализовано?
 1) Включить и выключить кофемашину
 2) Сенсоры
@@ -237,6 +235,11 @@ philips_series_5400:
   mainboard_uart: uart_mainboard
   id: philip
 ```
+
+* Рабочий код для управления кофемашиной можно взять [**здесь**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Config/coffee-philips-5400(work).yaml)
+* Варианты кода можете посмотреть [**здесь**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config) 
+
+
 
 Пример команды для отправки приготовления кофе. Вы можете создавать любые рецепты используя таблицу [протокола кофейных напитков](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Image/Protocol%20of%20coffee%20drinks%201.png?raw=true)
 
