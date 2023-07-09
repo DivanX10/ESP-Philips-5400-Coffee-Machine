@@ -72,3 +72,32 @@ group:
       - sensor.coffee_philips_5400_messge2_90 #Recipe Package
       - sensor.coffee_philips_5400_coffee_drink #Sensor of the selected coffee drink
       - button.coffee_philips_5400_build_coffee #Make coffee
+
+
+script:
+  kitchen_coffee_machine_power:
+    alias: 'Kitchen: Coffee machine. Power'
+    sequence:
+    - choose:
+      - conditions:
+        - condition: template
+          value_template: '{{ is_state("binary_sensor.coffee_philips_5400_power_status","off") }}'
+          alias: The coffee machine is turned off
+        sequence:
+        - service: button.press
+          data: {}
+          target:
+            entity_id: button.coffee_philips_5400_power_on
+          alias: Turn on the coffee machine
+      - conditions:
+        - condition: template
+          value_template: '{{ is_state("binary_sensor.coffee_philips_5400_power_status","on") }}'
+          alias: The coffee machine is on
+        sequence:
+        - service: button.press
+          data: {}
+          target:
+            entity_id: button.coffee_philips_5400_power_off
+          alias: Turn off the coffee machine
+    mode: single
+    icon: mdi:power
