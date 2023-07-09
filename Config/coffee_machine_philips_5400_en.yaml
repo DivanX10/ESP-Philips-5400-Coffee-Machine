@@ -1,0 +1,74 @@
+#We use sensors of a new sample from 2023
+#Documentation https://www.home-assistant.io/integrations/template/
+
+
+
+#This is an example of a new pattern pattern
+#template:
+#  - sensor:
+#      ...
+#  - binary_sensor:
+
+
+template:
+#Kitchen: Coffee machine. Power status
+#Object: sensor.coffee_machine_power_status
+  - sensor:
+      - name: 'Kitchen: Coffee machine. Power status'
+        unique_id: coffee_machine_power_status
+        icon: mdi:power
+        state: >
+            {% if not states('sensor.coffee_philips_5400_status') in ['Off','unknown']%} On
+            {% elif states('sensor.coffee_philips_5400_status') in ['Off','unknown'] or is_state('binary_sensor.coffee_philips_5400_power_status', 'off') %} Off
+            {% endif %}
+        attributes:
+          Making coffee: >
+            {% if not states('sensor.coffee_philips_5400_status') in ['Off','unknown'] %}
+              {{ states('sensor.coffee_philips_5400_status') }}
+            {% elif states('sensor.coffee_philips_5400_status') in ['Off','unknown'] or is_state('binary_sensor.coffee_philips_5400_power_status', 'off') %} Off
+            {% endif %}
+
+
+group:
+#Kitchen: Coffee machine. Info and menu
+#Object: group.kitchen_coffee_machine_info_and_menu
+  kitchen_coffee_machine_info_and_menu:
+    name: "Kitchen: Coffee machine. Info and menu"
+    all: false
+    entities:
+      - sensor.coffee_philips_5400_esphome_version #ESPHome version
+      - sensor.coffee_philips_5400_coffee_grounds_container #Container of coffee grounds
+      - sensor.coffee_philips_5400_coffee_pallet #Pallet
+      - sensor.coffee_philips_5400_grain_tray #Coffee beans in the tray
+      - sensor.coffee_philips_5400_system_status #System status
+      - sensor.coffee_philips_5400_making_coffee #Making coffee
+      - sensor.coffee_machine_power_status #Power status
+      - sensor.coffee_philips_5400_internal_temperature #Temperature ESP32
+      - sensor.coffee_philips_5400_error_code #System errors
+      - sensor.coffee_philips_5400_free_mem_size #Free memory size
+      - binary_sensor.coffee_philips_5400_power_status #Power status
+      - number.coffee_philips_5400_valve_closed #The water drain closed the spout of the coffee machine
+      - number.coffee_philips_5400_valve_open #The water drain opened the spout of the coffee machine
+      - number.coffee_philips_5400_valve_position #Servo position
+      - switch.coffee_philips_5400_valve_open_closed #Open or close the spout of the coffee machine
+      - switch.coffee_philips_5400_automatic_water_drain #Automatically open or close the spout of the coffee machine
+      - input_boolean.kitchen_coffee_machine_auto_coffee_making #Auto coffee making
+      - counter.coffee_machine_making_coffee #Counter for auto coffee making
+
+
+
+#Kitchen: Coffee machine. Coffee drinks
+#Object: group.kitchen_coffee_machine_coffee_drinks
+  kitchen_coffee_machine_coffee_drinks:
+    name: "Kitchen: Coffee machine. Coffee drinks"
+    all: false
+    entities:
+      - select.coffee_philips_5400_drink #Selection of coffee drinks
+      - select.coffee_philips_5400_cups #Selection number of servings
+      - select.coffee_philips_5400_grind #Strength, grain or ground coffee
+      - number.coffee_philips_5400_soffee #Coffee volume
+      - number.coffee_philips_5400_milk #Milk volume
+      - button.coffee_philips_5400_prepare #Show recipes in sensor 90
+      - sensor.coffee_philips_5400_messge2_90 #Recipe Package
+      - sensor.coffee_philips_5400_coffee_drink #Sensor of the selected coffee drink
+      - button.coffee_philips_5400_build_coffee #Make coffee

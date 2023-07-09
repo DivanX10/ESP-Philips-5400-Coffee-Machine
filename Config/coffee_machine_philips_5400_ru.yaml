@@ -1,0 +1,74 @@
+#Используем сенсоры нового образца от 2023
+#Документация https://www.home-assistant.io/integrations/template/
+
+
+
+#Это пример нового образца шаблонов
+#template:
+#  - sensor:
+#      ...
+#  - binary_sensor:
+
+
+template:
+#Кухня: Кофемашина. Статус питания
+#Объект: sensor.coffee_machine_power_status
+  - sensor:
+      - name: 'Кухня: Кофемашина. Статус питания'
+        unique_id: coffee_machine_power_status
+        icon: mdi:power
+        state: >
+            {% if not states('sensor.coffee_philips_5400_status') in ['Выключено','unknown']%} Включено
+            {% elif states('sensor.coffee_philips_5400_status') in ['Выключено','unknown'] or is_state('binary_sensor.coffee_philips_5400_power_status', 'off') %}Выключено
+            {% endif %}
+        attributes:
+          Making coffee: >
+            {% if not states('sensor.coffee_philips_5400_status') in ['Выключено','unknown'] %}
+              {{ states('sensor.coffee_philips_5400_status') }}
+            {% elif states('sensor.coffee_philips_5400_status') in ['Выключено','unknown'] or is_state('binary_sensor.coffee_philips_5400_power_status', 'off') %} Выключено
+            {% endif %}
+
+
+group:
+#Кухня: Кофемашина. Инфо и меню
+#Объект: group.kitchen_coffee_machine_info_and_menu
+  kitchen_coffee_machine_info_and_menu:
+    name: "Кухня: Кофемашина. Сенсоры"
+    all: false
+    entities:
+      - sensor.coffee_philips_5400_esphome_version #Версия ESPHome
+      - sensor.coffee_philips_5400_coffee_grounds_container #Контейнер кофейной гущи
+      - sensor.coffee_philips_5400_coffee_pallet #Поддон
+      - sensor.coffee_philips_5400_grain_tray #Кофейные зерна в лотке
+      - sensor.coffee_philips_5400_system_status #Системный статус
+      - sensor.coffee_philips_5400_making_coffee #Приготовление кофе
+      - sensor.coffee_machine_power_status #Статус питания
+      - sensor.coffee_philips_5400_internal_temperature #Температура ESP32
+      - sensor.coffee_philips_5400_error_code #Системные ошибки
+      - sensor.coffee_philips_5400_free_mem_size #Размер свободной памяти
+      - binary_sensor.coffee_philips_5400_power_status #Статус питания
+      - number.coffee_philips_5400_valve_closed #Отвод воды закрыл носик кофемашины
+      - number.coffee_philips_5400_valve_open #Отвод воды открыл носик кофемашины
+      - number.coffee_philips_5400_valve_position #Позиция сервопривода
+      - switch.coffee_philips_5400_valve_open_closed #Открыть или закрыть носик кофемашины
+      - switch.coffee_philips_5400_automatic_water_drain #Автоматически открывать или закрывать носик кофемашины
+      - input_boolean.kitchen_coffee_machine_auto_coffee_making #Авто приготовление кофе
+      - counter.coffee_machine_making_coffee #Счетчик для авто приготовление кофе
+
+
+
+#Кухня: Кофемашина. Кофейные напитки
+#Объект: group.kitchen_coffee_machine_coffee_drinks
+  kitchen_coffee_machine_coffee_drinks:
+    name: "Кухня: Кофемашина. Кофейные напитки"
+    all: false
+    entities:
+      - select.coffee_philips_5400_drink #Выбор кофейных напиток
+      - select.coffee_philips_5400_cups #Выбор количество порции
+      - select.coffee_philips_5400_grind #Крепость, зерно или молотый кофе
+      - number.coffee_philips_5400_soffee #Объем кофе
+      - number.coffee_philips_5400_milk #Объем молока
+      - button.coffee_philips_5400_prepare #Показать рецепт в сенсоре 90
+      - sensor.coffee_philips_5400_messge2_90 #Пакет рецепта
+      - sensor.coffee_philips_5400_coffee_drink #Сенсор выбранного кофейного напитка
+      - button.coffee_philips_5400_build_coffee #Приготовить кофе
