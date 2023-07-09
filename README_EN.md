@@ -213,7 +213,8 @@ Solder the wire to the resistor R110 (the nominal value of the resistor is 4.7 k
 
 We make a hole in the lid and take the wire out, which we connect to the relay or to the optocoupler
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/efb5ec12-5842-4f79-9b0a-1510859a50c1)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/8ad93af5-c652-428f-bab1-76f07a676e03)
+
 
 
 </details>
