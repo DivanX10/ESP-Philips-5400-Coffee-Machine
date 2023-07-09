@@ -297,7 +297,7 @@ button:
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/ae9311fd-a209-48bc-9537-510c5df05789)
 
 
-Скопируйте код [отсюда](), а после создайте карточку
+Скопируйте код [отсюда](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Config/coffee_machine_philips_5400_ru.yaml), а после создайте карточку
 
 Код карточки
 ```
