@@ -283,3 +283,61 @@ The MG90S Micro Servo 180 degree servo is used. It is quite enough to drain wate
 
 
 </details>
+
+<details>
+  <summary>Control Panel in Home Assistant</summary>
+  
+
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/e0d4b538-72ec-44f3-9131-2e53ded775b5)
+
+
+Copy the code [отсюда](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Config/coffee_machine_philips_5400_en.yaml) , and then create a card
+
+Card code
+```
+entity: sensor.coffee_machine_power_status
+type: custom:multiple-entity-row
+name: Status
+icon: mdi:coffee-maker
+state_color: true
+show_state: false
+secondary_info:
+  attribute: Making coffee
+entities:
+  - entity: group.kitchen_coffee_machine_info_and_menu
+    name: Menu
+    state_color: true
+    icon: mdi:information-outline
+    styles:
+      height: 60px
+      width: 50px
+  - entity: group.kitchen_coffee_machine_coffee_drinks
+    name: Drinks
+    state_color: true
+    icon: mdi:coffee
+    styles:
+      height: 60px
+      width: 50px
+  - entity: switch.coffee_philips_5400_valve_open_closed
+    name: Valve
+    type: switch
+    tap_action:
+      action: toggle
+    icon: mdi:coffee-maker-outline
+    state_color: true
+    styles:
+      height: 60px
+      width: 50px
+  - entity: binary_sensor.coffee_philips_5400_power_status
+    name: Power
+    icon: mdi:gesture-tap-button
+    state_color: true
+    tap_action:
+      action: call-service
+      service: script.kitchen_coffee_machine_power
+    styles:
+      height: 60px
+      width: 50px
+
+```
+</details>
