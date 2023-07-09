@@ -56,9 +56,68 @@
     * Сенсор выбранного кофейного напитка, обема кофе и молока
 
 
+<details>
+  <summary><b>Панель управления в Home Assistant</b></summary>
+  
+
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/6253a91c-9479-494c-ad8e-605d8406baed)
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/3526ea87-a62f-4d7d-8639-a5bcad70a0b5)
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/ae9311fd-a209-48bc-9537-510c5df05789)
+
+
+Скопируйте код [отсюда](), а после создайте карточку
+
+Код карточки
+```
+entity: sensor.coffee_machine_power_status
+type: custom:multiple-entity-row
+name: Статус
+icon: mdi:coffee-maker
+state_color: true
+show_state: false
+secondary_info:
+  attribute: Making coffee
+entities:
+  - entity: group.kitchen_coffee_machine_info_and_menu
+    name: Меню
+    state_color: true
+    icon: mdi:information-outline
+    styles:
+      height: 60px
+      width: 50px
+  - entity: group.kitchen_coffee_machine_coffee_drinks
+    name: Напитки
+    state_color: true
+    icon: mdi:coffee
+    styles:
+      height: 60px
+      width: 50px
+  - entity: switch.coffee_philips_5400_valve_open_closed
+    name: Клапан
+    type: switch
+    tap_action:
+      action: toggle
+    icon: mdi:coffee-maker-outline
+    state_color: true
+    styles:
+      height: 60px
+      width: 50px
+  - entity: binary_sensor.coffee_philips_5400_power_status
+    name: Питание
+    icon: mdi:gesture-tap-button
+    state_color: true
+    tap_action:
+      action: call-service
+      service: script.kitchen_coffee_machine_power
+    styles:
+      height: 60px
+      width: 50px
+
+```
+
+</details>
+
+
 
 
 ***
