@@ -267,7 +267,7 @@ button:
 
 **AA:AA:AA:B0** - протокол системных сенсоров: контейнер кофейной гущи, воды, поддона, анличие зерна, статусы приготовления кофе, статусы заварного блока
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/d5a13590-ed1f-485b-895f-d09f0bba9efc)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/04255199-1344-4441-a08b-1f0ea3ae3cf9)
 
 **AA:AA:AA:B5** - протокол счетчика кофейных напитков. Считает в секундах объем налитого кофе и молока
 
