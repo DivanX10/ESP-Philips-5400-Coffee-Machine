@@ -62,11 +62,6 @@ external_components:
       type: git
       url: https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine
 
-
-philips_series_5400:
-  display_uart: uart_display
-  mainboard_uart: uart_mainboard
-  id: philip
 ```
 
 При желании можно подключить компонент локально. Скачайте файлы в папку \esphome\components\ 
@@ -78,11 +73,6 @@ external_components:
       path: components
     components: [philips_series_5400]
 
-
-philips_series_5400:
-  display_uart: uart_display
-  mainboard_uart: uart_mainboard
-  id: philip
 ```
 
 * Рабочий код для управления кофемашиной можно взять [**здесь**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Config/coffee-philips-5400(work).yaml)
