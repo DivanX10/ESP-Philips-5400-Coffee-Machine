@@ -73,7 +73,7 @@ group:
       - sensor.coffee_philips_5400_coffee_drink #Sensor of the selected coffee drink
       - button.coffee_philips_5400_build_coffee #Make coffee
 
-
+#The script is needed for the card so that when you click on the "Power" button, the coffee machine turns on or off
 script:
   kitchen_coffee_machine_power:
     alias: 'Kitchen: Coffee machine. Power'
