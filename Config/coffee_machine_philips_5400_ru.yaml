@@ -75,8 +75,8 @@ group:
 
 
 script:
-  kitchen_coffee_machine_power_2:
-    alias: 'Кухня: Кофемашина. Питание 2'
+  kitchen_coffee_machine_power:
+    alias: 'Кухня: Кофемашина. Питание'
     sequence:
     - choose:
       - conditions:
