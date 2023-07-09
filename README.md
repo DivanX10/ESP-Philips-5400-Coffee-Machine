@@ -160,7 +160,7 @@ button:
 
 ### Общая схема подключения без реле и оптопары. Просто подключение ESP32 к кофемашине
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/9ad477de-6129-4215-9917-e703ad6a4bca)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/568e45a6-cceb-40d5-b7b2-5aa2f219ed8a)
 
 ***
 
