@@ -52,10 +52,91 @@
     * Сенсор ошибки
     * Сенсор 90 для отображения пакета рецепта кофейных напитков, этот пакет можете использовать для создания своего любимого рецепта кофейного напитка
 
+***
+
+### Добавление компонета Philips 5400 в ESPHome. 
+
+```
+external_components:
+  - source:
+      type: git
+      url: https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine
+
+
+philips_series_5400:
+  display_uart: uart_display
+  mainboard_uart: uart_mainboard
+  id: philip
+```
+
+При желании можно подключить компонент локально. Скачайте файлы в папку \esphome\components\ 
+
+```
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [philips_series_5400]
+
+
+philips_series_5400:
+  display_uart: uart_display
+  mainboard_uart: uart_mainboard
+  id: philip
+```
+
+* Рабочий код для управления кофемашиной можно взять [**здесь**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Config/coffee-philips-5400(work).yaml)
+* Варианты кода можете посмотреть [**здесь**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config) 
 
 
 
+Пример команды для отправки приготовления кофе. Вы можете создавать любые рецепты используя таблицу [протокола кофейных напитков](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Image/Protocol%20of%20coffee%20drinks%201.png?raw=true)
 
+Меняем только протокол с сообщением 0x90, а именно 0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00 на другое, то что скопируете с сенсора Messge2 90
+
+```
+button:
+
+#Пример кода для отправки кофейного напитка Кофе Max 150ml. Пакет рецепта копируется с сенсора Messge2 90, отсеиваем только первые 3 байта
+  - platform: template
+    name: "Кофе Max 150ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00};
+            id(philip)->coffee_start(data);
+            id(philip)->coffee_start();
+          }
+
+
+#Пример кода для отправки кофейного напитка Американо молотый 90ml. Пакет рецепта копируется с сенсора Messge2 90, отсеиваем только первые 3 байта
+  - platform: template
+    name: "Американо молотый 90ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x01, 0x03, 0x00, 0x02, 0x02, 0x00, 0x28, 0x00, 0x5A, 0x00};
+            id(philip)->coffee_start(data);
+            id(philip)->coffee_start();
+          }
+
+
+#Пример кода для отправки кофейного напитка Кофе с молоком 120/120ml. Пакет рецепта копируется с сенсора Messge2 90, отсеиваем только первые 3 байта
+  - platform: template
+    name: "Кофе с молоком 120/120ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x02, 0x02, 0x00, 0x02, 0x01, 0x02, 0x78, 0x00, 0x78, 0x00};
+            id(philip)->coffee_start(data);
+            id(philip)->coffee_start();
+          }
+
+
+```
 ***
 
 
@@ -195,7 +276,6 @@
 </details>
 
 
-
 <details>
   <summary>Отвод воды носика кофемашины</summary>
 
@@ -212,86 +292,3 @@
 
 
 </details>
-
-***
-
-### Добавление компонета Philips 5400 в ESPHome. 
-
-```
-external_components:
-  - source:
-      type: git
-      url: https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine
-
-
-philips_series_5400:
-  display_uart: uart_display
-  mainboard_uart: uart_mainboard
-  id: philip
-```
-
-При желании можно подключить компонент локально. Скачайте файлы в папку \esphome\components\ 
-
-```
-external_components:
-  - source:
-      type: local
-      path: components
-    components: [philips_series_5400]
-
-
-philips_series_5400:
-  display_uart: uart_display
-  mainboard_uart: uart_mainboard
-  id: philip
-```
-
-* Рабочий код для управления кофемашиной можно взять [**здесь**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Config/coffee-philips-5400(work).yaml)
-* Варианты кода можете посмотреть [**здесь**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config) 
-
-
-
-Пример команды для отправки приготовления кофе. Вы можете создавать любые рецепты используя таблицу [протокола кофейных напитков](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Image/Protocol%20of%20coffee%20drinks%201.png?raw=true)
-
-Меняем только протокол с сообщением 0x90, а именно 0x0A, 0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00 на другое
-
-```
-button:
-  - platform: template
-    name: "Кофе Max 150ml"
-    icon: mdi:coffee
-    on_press:
-      - lambda: |-
-          {
-            uint8_t data[]={0x93, id(pack_counter)++, 0x01, 0x01};
-            id(philip)->send_packet(data, sizeof(data));
-          }
-          {
-            uint8_t data[]={0x90, id(pack_counter)++, 0x0A, 0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00};
-            id(philip)->send_packet(data, sizeof(data));
-          }
-          {
-            uint8_t data[]={0x91, id(pack_counter)++, 0x01, 0x03};
-            id(philip)->send_packet(data, sizeof(data));
-          }
-
-
-  - platform: template
-    name: "Кофе с молоком 120/120ml"
-    icon: mdi:coffee
-    on_press:
-      - lambda: |-
-          {
-            uint8_t data[]={0x93, id(pack_counter)++, 0x01, 0x01};
-            id(philip)->send_packet(data, sizeof(data));
-          }
-          {
-            uint8_t data[]={0x90, id(pack_counter)++, 0x0A, 0x02, 0x02, 0x00, 0x02, 0x01, 0x02, 0x78, 0x00, 0x78, 0x00};
-            id(philip)->send_packet(data, sizeof(data));
-          }
-          {
-            uint8_t data[]={0x91, id(pack_counter)++, 0x01, 0x03};
-            id(philip)->send_packet(data, sizeof(data));
-          }
-
-```
