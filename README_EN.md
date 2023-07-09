@@ -46,11 +46,8 @@ All materials of this project (firmware, schematics, 3D models, etc.) are provid
     * Sensor 90 to display the coffee drink recipe package, you can use this package to create your favorite coffee drink recipe
     * Sensor of the selected coffee drink, coffee volume and milk
 
-
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/6253a91c-9479-494c-ad8e-605d8406baed)
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/3526ea87-a62f-4d7d-8639-a5bcad70a0b5)
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/ae9311fd-a209-48bc-9537-510c5df05789)
-
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/75a325bc-6d66-44b1-81e2-c74b00aae8c3)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/4e5ff318-799f-40e0-8793-446b71284e57)
 
 ***
 
@@ -153,7 +150,8 @@ We need access to an 8-core wire that needs to be connected to the ESP
 
 ### General connection diagram without relays and optocouplers. Just connect the ESP32 to the coffee machine
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/568e45a6-cceb-40d5-b7b2-5aa2f219ed8a)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/b24a0b0f-3e35-4f0b-9732-286cdf9c7fc7)
+
 
 ***
 
@@ -253,11 +251,13 @@ Brief description of the protocol function
 
 **AA:AA:AA:91** - protocol of the coffee drinks counter. It's just a record of the coffee drinks made and the record is reset when the coffee machine turns off. We made one cup of coffee, the counter worked and set for example 1, then we made another cup of coffee, the counter worked again and set 2. In order to remotely start the preparation of coffee drinks, you need to run at +1 to what is in the counter. Without taking into account this counter, the preparation of coffee drinks remotely will not work
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/1a834ee8-3264-4f91-9807-771a8789348d)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/f72f3394-b41d-47f6-8d43-6e5266021999)
+
 
 **AA:AA:AA:B0** - protocol of system sensors: container of coffee grounds, water, tray, presence of grain, coffee preparation statuses, custard block statuses
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/04255199-1344-4441-a08b-1f0ea3ae3cf9)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/ea0f03eb-0cfd-4d86-b0ca-d164f7efcb1b)
+
 
 **AA:AA:AA:B5** - protocol of the coffee drinks counter. Counts the volume of poured coffee and milk in seconds
 
