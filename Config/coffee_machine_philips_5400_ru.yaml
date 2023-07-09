@@ -73,7 +73,7 @@ group:
       - sensor.coffee_philips_5400_coffee_drink #Сенсор выбранного кофейного напитка
       - button.coffee_philips_5400_build_coffee #Приготовить кофе
 
-
+#Скрипт нужен для карточки, чтобы при нажатии на кнопку "Питание", кофемашина включилась или выключилась
 script:
   kitchen_coffee_machine_power:
     alias: 'Кухня: Кофемашина. Питание'
