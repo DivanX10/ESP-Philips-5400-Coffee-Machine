@@ -243,8 +243,8 @@ Brief description of the protocol function
 
 **AA:AA:AA:90** - coffee drink recipes
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/23058a61-2b1f-4cf7-84b2-5f59e354bc92)
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/7a309c2f-0e4d-428a-b720-3cfbf1d820af)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/fc43f9f1-3155-4813-84ad-c3978fed41cc)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/bc3260f5-ba94-49b4-8448-e8c7f73873e2)
 
 
 **AA:AA:AA:91** - protocol of the coffee drinks counter. It's just a record of the coffee drinks made and the record is reset when the coffee machine turns off. We made one cup of coffee, the counter worked and set for example 1, then we made another cup of coffee, the counter worked again and set 2. In order to remotely start the preparation of coffee drinks, you need to run at +1 to what is in the counter. Without taking into account this counter, the preparation of coffee drinks remotely will not work
@@ -259,7 +259,8 @@ Brief description of the protocol function
 
 **AA:AA:AA:B5** - protocol of the coffee drinks counter. Counts the volume of poured coffee and milk in seconds
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/db3e16f0-f321-4857-acc7-f7ade6bc8b76)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/06e32b5e-5455-46e5-9f86-b6d76ef755a6)
+
 
 
 </details>
