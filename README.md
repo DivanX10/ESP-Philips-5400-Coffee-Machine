@@ -1,3 +1,5 @@
+### [Read in English here](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/README_EN.md)
+
 # ESP-Philips-5400-Coffee-Machine
 
 <img src="https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Image/Coffee%20machine%20philips%205400.jpg" width=50%>
