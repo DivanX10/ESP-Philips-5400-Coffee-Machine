@@ -72,3 +72,32 @@ group:
       - sensor.coffee_philips_5400_messge2_90 #Пакет рецепта
       - sensor.coffee_philips_5400_coffee_drink #Сенсор выбранного кофейного напитка
       - button.coffee_philips_5400_build_coffee #Приготовить кофе
+
+
+script:
+  kitchen_coffee_machine_power_2:
+    alias: 'Кухня: Кофемашина. Питание 2'
+    sequence:
+    - choose:
+      - conditions:
+        - condition: template
+          value_template: '{{ is_state("binary_sensor.coffee_philips_5400_power_status","off") }}'
+          alias: Кофемашина выключена
+        sequence:
+        - service: button.press
+          data: {}
+          target:
+            entity_id: button.coffee_philips_5400_power_on
+          alias: Включить кофемашину
+      - conditions:
+        - condition: template
+          value_template: '{{ is_state("binary_sensor.coffee_philips_5400_power_status","on") }}'
+          alias: Кофемашина включена
+        sequence:
+        - service: button.press
+          data: {}
+          target:
+            entity_id: button.coffee_philips_5400_power_off
+          alias: Выключить кофемашину
+    mode: single
+    icon: mdi:power
