@@ -289,9 +289,10 @@ The MG90S Micro Servo 180 degree servo is used. It is quite enough to drain wate
   
 
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/e0d4b538-72ec-44f3-9131-2e53ded775b5)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/9ee4dd36-76c5-4716-9ea5-f99f4018eeed)
 
 
-Copy the code [отсюда](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Config/coffee_machine_philips_5400_en.yaml) , and then create a card
+Copy the code [from here](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Config/coffee_machine_philips_5400_en.yaml) , and then create a card
 
 Card code
 ```
