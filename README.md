@@ -75,12 +75,15 @@ external_components:
 
 ```
 
-* Рабочие варианты кода для управления кофемашиной можно взять [**здесь**]([https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Config/coffee-philips-5400(work).yaml](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config))
+* Рабочие варианты кода для управления кофемашиной можно взять [**здесь**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config)
 
+***
 
-Пример команды для отправки приготовления кофе. Вы можете создавать любые рецепты используя таблицу [протокола кофейных напитков](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Protocol/Протокол%20кофейных%20напитков%20и%20программы.xlsx)
+### Примеры отправки собственных кофейных напитков
 
-Меняем только протокол с сообщением 0x90, а именно 0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00 на другое, то что скопируете с сенсора Messge2 90
+Вы можете создавать любые рецепты используя таблицу [**протокола кофейных напитков**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/raw/main/Protocol/Протокол%20кофейных%20напитков%20и%20программы.xlsx) в Excel
+
+> Меняем только протокол с сообщением 0x90, а именно 0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00 на другое, то что скопируете с сенсора Messge2 90, отсеиваем только первые 3 байта
 
 ```
 button:
