@@ -46,8 +46,6 @@ All materials of this project (firmware, schematics, 3D models, etc.) are provid
     * Sensor 90 to display the coffee drink recipe package, you can use this package to create your favorite coffee drink recipe
     * Sensor of the selected coffee drink, coffee volume and milk
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/75a325bc-6d66-44b1-81e2-c74b00aae8c3)
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/4e5ff318-799f-40e0-8793-446b71284e57)
 
 ***
 
