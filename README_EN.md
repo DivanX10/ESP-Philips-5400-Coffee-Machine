@@ -85,7 +85,7 @@ external_components:
 
 > We change only the protocol with the message 0x90, namely 0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00 to another, what you copy from the sensor Messge2 90, we filter out only the first 3 bytes
 
-You can create any recipes using the table [**protocol of coffee drinks**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/raw/main/Protocol/Протокол%20кофейных%20напитков%20и%20программы.xlsx) in Excel
+You can create any recipes using the table [**protocol of coffee drinks**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/raw/main/Protocol/Protocol%20of%20coffee%20drinks%20and%20programs.xlsx) in Excel
 
 ```
 button:
