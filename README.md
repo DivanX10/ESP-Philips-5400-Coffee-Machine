@@ -56,6 +56,7 @@
 
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/6253a91c-9479-494c-ad8e-605d8406baed)
 ![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/3526ea87-a62f-4d7d-8639-a5bcad70a0b5)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/ae9311fd-a209-48bc-9537-510c5df05789)
 
 
 ***
