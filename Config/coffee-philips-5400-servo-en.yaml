@@ -1,0 +1,524 @@
+#This option is equipped with a servo drive and automatic water removal from the spout of the coffee machine
+#Connect the MG90S Micro Servo
+#Added a servo for the water pump of the coffee machine spout
+#Added a switch for automatic operation of water drainage
+#Added one example of a coffee drink to understand where and how to add your favorite coffee drinks
+
+substitutions:
+  board_name: Coffee Philips 5400
+  node_name: coffee-philips-5400
+
+esphome:
+  name: ${node_name}
+  friendly_name: coffee-philips-5400
+  comment: ESP32 Coffee Philips 5400
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+    version: recommended
+
+#Wi-Fi credentials for connecting the board to the home network
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: off
+  reboot_timeout: 15min
+
+#If there is no connection with WiFi, then the access point will rise
+  ap:
+    ssid: ESP SmartCoffeePhilips
+    password: !secret ap_esp_password
+
+#The captive portal component in ESPHome is a backup mechanism in case of a connection failure to the configured Wi-Fi
+captive_portal:
+
+#The web server is turned off on purpose, since the coffee machine turns off spontaneously at any moment
+#web_server:
+#  port: 80
+
+#Logging
+logger:
+  level: ERROR #NONE
+  baud_rate: 0
+
+#Enable OTA
+ota:
+  password: "esphome"
+
+#Enable Home Assistant API
+#Encryption turned off to reduce the load on the ESP
+api:
+
+
+#####################################################################################
+############################## Output Platform #####################################
+output:
+  - platform: ledc
+    id: pwm_output
+    pin: GPIO27
+    frequency: 50 Hz
+
+#####################################################################################
+################################ Configuration #######################################
+#MG90S Micro Servo Servo
+servo:
+  - id: idServoControl
+    output: pwm_output
+    auto_detach_time: 5s #Idle time, after which the servo is automatically disconnected
+    transition_length: 2s #The time it takes for the servo to move smoothly between different positions
+    restore: true #Restoring the servo position after a reboot or power failure
+    min_level: 5% #The minimum level of the PWM signal. Pulse = 1 ms, hence min_level = 1 * 100 / 20 = 5%
+    idle_level: 7.5% #The average level of the PWM signal. Pulse = 1.5 ms, hence idle_level = 1,5 * 100 / 20 = 7.5%
+    max_level: 10% #The maximum level of the PWM signal. Pulse = 2 ms, hence max_level = 2 * 100 / 20 = 10%
+
+
+#####################################################################################
+################################## External component ################################
+external_components:
+  - source:
+      type: git
+      url: https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine
+
+#####################################################################################
+######################################### UART ######################################
+uart:
+ - id: uart_display
+   rx_pin: GPIO16
+   tx_pin: GPIO17
+   baud_rate: 115200
+   stop_bits: 1
+   data_bits: 8
+   parity: NONE
+   rx_buffer_size: 256
+
+ - id: uart_mainboard
+   rx_pin: GPIO3 #gpio 14 is recommended
+   tx_pin: GPIO1 #gpio 5 is recommended
+   baud_rate: 115200
+   stop_bits: 1
+   data_bits: 8
+   parity: NONE
+   rx_buffer_size: 256
+
+
+######################################################################################
+################################## Connected component ##############################
+philips_series_5400:
+  display_uart: uart_display
+  mainboard_uart: uart_mainboard
+  restore_value: true
+  id: philip 
+  #Sensors for publishing messages in text form. In order for the sensor to be displayed, comment
+  #B0_msg:
+  #  name: Messge B0 #System sensors
+  #B5_msg:
+  #  name: Messge B5 #Coffee and milk volume counter for making coffee drinks
+  #BA_msg:
+  #  name: Messge BA #Couldn't decipher
+  90_msg:
+    name: Messge2 90 #Coffee Drink Recipes
+  #91_msg:
+  #  name: Messge3 91 #Coffee Beverage Preparation counter
+  #93_msg:
+  #  name: Messge1 93 #Coffee Beverage Preparation counter
+
+  #Coffee Settings
+  Coffee_volume: #Coffee volume NUMBER
+    name: Сoffee
+    mode: box #slider/box
+  Milk_volume: #Milk volume NUMBER
+    name: Milk
+    mode: box #slider/box
+  Strength_select: #Grinding SELECT
+    name: Grind
+  Cups_select: #Number of cups SELECT
+    name: Cups
+  Product_select: #Choosing a coffee drink SELECT
+    name: Drink
+  Display_product: #Product in operation, text sensor
+    name: Product
+  Start_key: #Start cooking button
+    name: Build Coffee
+  Test_key: #Display the selected recipe in the sensor 90
+    name: Prepare
+
+
+  #The sensor into which the component publishes the status digitally
+  state_sensor:
+    name: Work State
+    id: idControlSensor
+    internal: True #Hide - True \Show - False
+    on_value:
+      then:
+      - lambda: |-
+          //AA:AA:AA:B0 "System sensors"
+          if(x==21){
+           id(idStatus).publish_state("Choose a drink");
+           id(idWater).publish_state("There is water");
+           id(idPallet).publish_state("Inserted");
+           id(idGrainTray).publish_state("There are grains");
+           id(idCoffeeGroundsContainer).publish_state("Empty");
+          }
+
+          //AA:AA:AA:B0 "Statuses"
+          else if(x==1){id(idStatus).publish_state("Something (07 01 00)");}
+          else if(x==2){id(idStatus).publish_state("Off");}
+          else if(x==3){id(idStatus).publish_state("Pour the milk");}
+          else if(x==4){id(idStatus).publish_state("Pour the coffee");}
+          else if(x==5){id(idStatus).publish_state("Preliminary dosing");}
+          else if(x==6){id(idStatus).publish_state("Creating steam for milk");}
+          else if(x==7){id(idStatus).publish_state("The brewing unit to the brewing position");}
+          else if(x==8){id(idStatus).publish_state("Enjoy");}
+          else if(x==9){id(idStatus).publish_state("Water heating");}
+          else if(x==10){id(idStatus).publish_state("Grinding the grains");}
+          else if(x==11){id(idStatus).publish_state("Flushing");}
+          else if(x==12){id(idGrainTray).publish_state("The grains ran out");}
+          else if(x==13){id(idStatus).publish_state("Something (07 08 14)");}
+          else if(x==14){id(idStatus).publish_state("Heating");}
+          else if(x==15){id(idStatus).publish_state("Enjoy");}
+          else if(x==16){id(idStatus).publish_state("Something (07 0C 02)");}
+          else if(x==17){id(idWater).publish_state("There is water");}
+          else if(x==18){id(idPallet).publish_state("Inserted");}
+          else if(x==20){id(idCoffeeGroundsContainer).publish_state("Oporozhe. container for coffee grounds");}
+          else if(x==22){id(idWater).publish_state("There is no water");}
+          else if(x==23){id(idPallet).publish_state("Retrieved");}
+          else if(x==24){id(idPallet).publish_state("Descaling. Step 1");}
+          else if(x==25){id(idPallet).publish_state("Descaling. Step 2");}
+          
+
+          //AA:AA:AA:B5 "Error Code"
+          else if(x==30){id(idErrorCode).publish_state("00");}
+          else if(x==31){id(idErrorCode).publish_state("0B");}
+          else if(x==32){id(idErrorCode).publish_state("E6");}
+          else if(x==33){id(idErrorCode).publish_state("80");}
+          else if(x==34){id(idErrorCode).publish_state("CB");}
+          else if(x==35){id(idErrorCode).publish_state("FF");}
+          else if(x==36){id(idErrorCode).publish_state("A0");}
+
+
+#####################################################################################
+########################### Global variables ###################################
+globals:
+#Status of the switch for automatic operation of the water outlet
+  - id: idSavedAutoWaterDrain
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+
+#Status of the water drain switch
+  - id: idSavedStateValve
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
+
+#####################################################################################
+################################## Binary sensor ##################################
+#Coffee machine status: on or off
+binary_sensor:
+  - platform: template
+    name: "Power Status"
+    id: idPowerStatus
+    icon: mdi:power
+    lambda: |-
+      if (id(idControlSensor).state != 2) {
+        return true;
+      } else {
+        return false;
+      }
+
+#####################################################################################
+################################## Sensor ###########################################
+sensor:
+#WiFi Signal Strength Sensor
+  - platform: wifi_signal
+    name: RSSI WiFi
+    icon: mdi:wifi
+    update_interval: 60s
+
+#ESP Uptime sensor
+  - platform: uptime
+    name: Uptime Sensor
+    update_interval: 60s
+
+#Sensor of the built-in temperature sensor in ESP
+  - platform: internal_temperature
+    name: "Internal Temperature"
+    icon: mdi:thermometer
+
+#Free memory
+  - platform: template
+    name: Free Mem Size
+    icon: mdi:memory
+    entity_category: diagnostic
+    lambda: |-
+      #ifdef MALLOC_CAP_DEFAULT
+         size_t freeValue = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
+      #else
+         size_t freeValue = ESP.getFreeHeap();
+      #endif
+      return freeValue;
+
+
+#####################################################################################
+################################### Text Sensor ################################
+text_sensor:
+#Сенсор IP
+  - platform: wifi_info
+    ip_address:
+      name: IP
+
+#ESPHome Version
+  - platform: version
+    hide_timestamp: true
+    name: "ESPHome Version"
+
+#Water container
+  - platform: template
+    name: "Water"
+    icon: mdi:cup-water
+    id: idWater
+    update_interval: never
+
+#Container of coffee grounds
+  - platform: template
+    name: "Coffee Grounds Container"
+    icon: mdi:train-car-centerbeam-full
+    id: idCoffeeGroundsContainer
+    update_interval: never
+
+#Pallet
+  - platform: template
+    name: "Coffee Pallet"
+    icon: mdi:spirit-level
+    id: idPallet
+    update_interval: never
+
+#System errors
+  - platform: template
+    name: "Error Code"
+    icon: mdi:alert-circle-outline
+    id: idErrorCode
+    update_interval: never
+
+#Coffee beans
+  - platform: template
+    name: "Grain Tray"
+    icon: mdi:grain
+    id: idGrainTray
+    update_interval: never
+
+#Statuses
+  - platform: template
+    name: "Status"
+    icon: mdi:coffee-to-go
+    id: idStatus
+    update_interval: never
+    on_value:
+      then:
+        - if:
+            condition:
+              - lambda: 'return id(idControlSensor).state == 21;'
+            then:  
+              - script.execute: script_auto_water_drain
+        - if:
+            condition:
+              - lambda: 'return id(idControlSensor).state == 2;'
+            then:  
+              - script.execute: script_auto_water_drain
+
+#####################################################################################
+####################################### Script ######################################
+script:
+#If you turn on the "Automatic Water Drain" switch, the water drain, depending on the status of the coffee machine, will take the desired position
+#If the coffee machine is turned off, then when the "Automatic Water Drain" is turned on, the water drain will close the spout, and when turned off, it will move aside and #open the spout
+#The || sign means a condition or
+  - id: script_auto_water_drain_on
+    then:
+      - if:
+          condition:
+            - lambda: 'return id(idControlSensor).state == 21;'
+          then:  
+            - switch.turn_on: idServoControlSwitch #Do not block the spout of the coffee machine with water drainage
+      - if:
+          condition:
+            - lambda: 'return id(idControlSensor).state == 2;'
+          then:  
+            - switch.turn_off: idServoControlSwitch #We block the spout of the coffee machine with water drainage
+
+#If the "Automatic Water Drain" switch is turned on, the water drain will be removed after the flushing stage has passed and you will be asked to choose a drink, if the #coffee machine is turned off, the water drain will be in the position at the spout
+  - id: script_auto_water_drain
+    then:
+      - if:
+          condition:
+              #If "Automatic Water Drain" is enabled and the water drain closes the spout and the status "Choose a drink"
+            - lambda: 'return id(idAutoWaterDrain).state == true && id(idServoControlSwitch).state == false && id(idControlSensor).state == 21;'
+          then:  
+            - switch.turn_on: idServoControlSwitch
+      - if:
+          condition:
+              #If "Automatic Water Drain" is enabled and the water drain has not closed the spout
+            - lambda: 'return id(idAutoWaterDrain).state == true && id(idServoControlSwitch).state == true;'
+          then:
+            - if:
+                condition:
+                    #If the coffee machine is turned off, where the status idPowerStatus = false or idStatus = "Off"
+                  - lambda: 'return id(idControlSensor).state == 2;'
+                then:
+                  - delay: 5s 
+                  - if:
+                      condition:
+                          #Re-checking if the coffee machine is turned off, where the status idPowerStatus = false or idStatus = "Off"
+                        - lambda: 'return id(idControlSensor).state == 2;'
+                      then:
+                        - switch.turn_off: idServoControlSwitch
+
+#####################################################################################
+################################## Switch ######################################
+switch:
+#Hidden switch for relay control, for turning on and off the coffee machine
+  - platform: gpio
+    pin: GPIO26
+    name: "Relay Switch"
+    id: idRelaySwitch
+    internal: True #Hide - True \Show - False
+    restore_mode: ALWAYS_OFF #Always off
+
+#Servo switch with start and end position
+  - platform: template
+    id: idServoControlSwitch
+    name: Valve open/closed
+    icon: mdi:coffee-maker-outline
+    optimistic: True
+    lambda: !lambda 'return id(idSavedStateValve);'
+    turn_on_action:
+      - switch.template.publish:
+         id: idServoControlSwitch
+         state: true
+      - servo.write:
+         id: idServoControl
+         level: !lambda 'return (id(idValveOpen).state/100);'
+      - globals.set:
+          id: idSavedStateValve
+          value: 'true'
+    turn_off_action:
+      - switch.template.publish:
+         id: idServoControlSwitch
+         state: false
+      - servo.write:
+         id: idServoControl
+         level: !lambda 'return (id(idValveClosed).state/100);'
+      - globals.set:
+          id: idSavedStateValve
+          value: 'false'
+
+#Automatic operation of water drainage
+  - platform: template
+    name: "Automatic Water Drain"
+    icon: mdi:water
+    id: idAutoWaterDrain
+    internal: False #Hide - True \Show - False
+    optimistic: True
+    lambda: !lambda 'return id(idSavedAutoWaterDrain);'
+    turn_on_action:
+      - script.execute: script_auto_water_drain_on
+      - globals.set:
+          id: idSavedAutoWaterDrain
+          value: 'true'
+    turn_off_action:
+      - switch.turn_on: idServoControlSwitch
+      - globals.set:
+          id: idSavedAutoWaterDrain
+          value: 'false'
+
+
+
+#####################################################################################
+####################################### Button ######################################
+button:
+#Reboot
+  - platform: restart
+    name: Restart
+    icon: mdi:restart
+
+#Turn on the coffee machine
+  - platform: template
+    name: "Power ON"
+    icon: mdi:power
+    on_press:
+      - switch.turn_on: idRelaySwitch
+      - delay: 1s
+      - switch.turn_off: idRelaySwitch
+
+#Turn off the coffee machine
+  - platform: template
+    name: "Power OFF"
+    icon: mdi:power
+    on_press:
+      #Turn on the relay
+      - switch.turn_on: idRelaySwitch
+      #Delay of 2 seconds
+      - delay: 2s
+      #Turn off the relay
+      - switch.turn_off: idRelaySwitch
+
+#Additional switch-off button of the coffee machine, in case it does not turn off via the main switch-off button
+  - platform: template
+    name: "Power OFF AA:FE"
+    icon: mdi:power
+    on_press:
+      #We send a command to turn off the coffee machine
+      - uart.write:
+          id: uart_mainboard
+          data: [0xAA, 0xAA, 0xAA, 0xFE, 0x00, 0x00, 0xC8, 0x87, 0x1B, 0x40, 0x55]
+
+
+#####################################################################################
+############################ Coffee Recipes #############################
+  - platform: template
+    name: "Americano ground 90ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x01, 0x03, 0x00, 0x02, 0x02, 0x00, 0x28, 0x00, 0x5A, 0x00};
+            id(philip)->coffee_start(data);
+            id(philip)->coffee_start();
+          }
+
+
+#####################################################################################
+####################################### Number #######################################
+#Slider for servo control
+number:
+#Specify the initial position of the servo
+  - platform: template
+    name: Valve open
+    id: idValveOpen
+    min_value: -100
+    max_value: 100
+    mode: box #slider/box
+    step: 1
+    optimistic: true
+    restore_value: true
+
+#Specify the final position of the servo
+  - platform: template
+    name: Valve closed
+    id: idValveClosed
+    min_value: -100
+    max_value: 100
+    mode: box #slider/box
+    step: 1
+    optimistic: true
+    restore_value: true
+
+
+#####################################################################################
+####################################### Time #######################################
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: Europe/Moscow
+
