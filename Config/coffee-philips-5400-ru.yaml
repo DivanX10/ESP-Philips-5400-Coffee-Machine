@@ -86,6 +86,7 @@ philips_series_5400:
   display_uart: uart_display
   mainboard_uart: uart_mainboard
   restore_value: true
+  debug: true #Режим отладки. Если включить, то при выборе напитка, объема кофе, молока, порции, будет отображаться пакет рецептов
   id: philip 
   #Cенсоры публикации сообщений в текстовом виде. Чтобы сенсор отображался, расскоментируйте
   #B0_msg:
@@ -94,33 +95,54 @@ philips_series_5400:
   #  name: Messge B5 #Счетчик объема кофе и молока для приготовления кофейных напитков
   #BA_msg:
   #  name: Messge BA #Не смог расшифровать
-  90_msg:
+  90_msg: 
     name: Messge2 90 #Рецепты кофейных напитков
   #91_msg:
   #  name: Messge3 91 #Счетчик приготовления кофейных напитков
   #93_msg:
   #  name: Messge1 93 #Не смог расшифровать
 
-  #Настройки кофе
+#Настройки кофе
   Coffee_volume: #Объем кофе NUMBER
     name: Сoffee
     mode: box #slider/box
   Milk_volume: #Объем молока NUMBER
     name: Milk
     mode: box #slider/box
-  Strength_select: #Помол SELECT
-    name: Grind
-  Cups_select: #Количество чашек SELECT
-    name: Cups
-  Product_select: #Выбор кофейного напитка SELECT
-    name: Drink
-  Display_product: #Продукт в работе, текстовый сенсор
-    name: Product
+  Display_product: #Кофейный напиток, текстовый сенсор
+    name: Coffee Drink
   Start_key: #Запуск приготовления кнопка
-    name: Build Coffee
-  Test_key: #Отобразить выбранный рецепт в сенсоре 90 
-    name: Prepare
-
+    name: Build Coffee  
+  Strength_select: #Помол SELECT. Можно указать любое название для своего удобства
+    name: Grind
+    options:
+      - "Молотый"
+      - "Мягкий"
+      - "Средний"
+      - "Крепкий"
+  Cups_select: #Количество чашек SELECT. Можно указать любое название для своего удобства
+    name: Cups
+    options:
+      - "1 чашка"
+      - "2 чашки"
+      - "Extra Shot"
+  Product_select: #Выбор кофейного напитка SELECT. Можно указать любое название для своего удобства
+    name: Drink
+    options:
+      - "Эспрессо"
+      - "Кофе в дорогу"
+      - "Кофе"
+      - "Эспрессо лунго"
+      - "Кафе крема"
+      - "Ристретто"
+      - "Американо"
+      - "Кофе с молоком"
+      - "Кофе латте"
+      - "Кофе с молоком в дорогу"
+      - "Латте макиато"
+      - "Капучино"
+      - "Молочная пена"
+      - "Горячая вода"
 
   #Сенсор в который компонент публикует статус в цифровом виде
   state_sensor:
@@ -130,6 +152,13 @@ philips_series_5400:
     on_value:
       then:
       - lambda: |-
+          //Статус состояния кофемашины, включена или выключена
+          if(x==2){
+            id(idPowerStatus).publish_state(false);
+          } else if(id(idPowerStatus).state==false){
+            id(idPowerStatus).publish_state(true);
+          }
+
           //AA:AA:AA:B0 "Системные сенсоры"
           if(x==21){
            id(idStatus).publish_state("Выберите напиток");
@@ -183,12 +212,6 @@ binary_sensor:
     name: "Power Status"
     id: idPowerStatus
     icon: mdi:power
-    lambda: |-
-      if (id(idControlSensor).state != 2) {
-        return true;
-      } else {
-        return false;
-      }
 
 #####################################################################################
 ################################## Сенсор ###########################################
