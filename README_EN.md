@@ -8,9 +8,14 @@ Modification and remote control of the Philips 5400 coffee machine. Management i
 > Important!
 All materials of this project (firmware, schematics, 3D models, etc.) are provided "AS IS". Everything you do with your equipment, you do at your own risk. The author is not responsible for the result and does not guarantee anything. Modification of the coffee machine requires intervention, which will automatically deprive you of the warranty for a new coffee machine.
 
+> Working versions of the code for controlling the coffee machine can be taken [**here**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config/ESPHome) (read the comments in the code)
 
-### What can integration do?
+***
 
+<details>
+  <summary>What can integration do?</summary>
+
+  
 1) Turn on and off the coffee machine
 2) Choose a coffee drink
    * Espresso
@@ -46,10 +51,12 @@ All materials of this project (firmware, schematics, 3D models, etc.) are provid
     * Sensor 90 to display the coffee drink recipe package, you can use this package to create your favorite coffee drink recipe
     * Sensor of the selected coffee drink, coffee volume and milk
 
+</details>
 
-***
 
-### Adding the Philips 5400 component to ESPHome
+<details>
+  <summary>Adding the Philips 5400 component to ESPHome</summary>
+  
 
 ```
 external_components:
@@ -70,11 +77,11 @@ external_components:
 
 ```
 
-* Working versions of the code for controlling the coffee machine can be taken [**here**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config)
+</details>
 
-***
-
-### Examples of sending your own coffee drinks
+<details>
+  <summary>Examples of sending your own coffee drinks</summary>
+  
 
 > This is purely a recommendation and notification. The decision is up to you. For this model, any changes to the drink parameter are saved to the profile, except for the guest profile. In order not to overwrite profiles, you can select a guest profile and sending recipes for cooking, the changes will not be overwritten. When you send any drink, the screen will not display the drink you selected, but the drink that you selected last time on the control panel of the coffee machine will be displayed. If you didn't touch the screen, then the first drink will be selected by default, this is espresso
 
@@ -125,7 +132,7 @@ button:
 
 
 ```
-***
+</details>
 
 
 <details>
