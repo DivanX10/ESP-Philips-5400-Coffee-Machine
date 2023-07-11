@@ -94,8 +94,8 @@ uart:
    rx_buffer_size: 256
 
  - id: uart_mainboard
-   rx_pin: GPIO3 #gpio 14 is recommended
-   tx_pin: GPIO1 #gpio 5 is recommended
+   rx_pin: GPIO14
+   tx_pin: GPIO5
    baud_rate: 115200
    stop_bits: 1
    data_bits: 8
