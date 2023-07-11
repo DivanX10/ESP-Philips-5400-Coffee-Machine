@@ -139,10 +139,10 @@ philips_series_5400:
   Strength_select: #Grinding SELECT. If you remove options, it will be displayed in English by default, if you want to see it in your own language, then use options and specify the name in your native language
     name: Grind
     #options:
-     #- "Молотый"
      #- "Мягкий"
      #- "Средний"
      #- "Крепкий"
+     #- "Молотый"
   Cups_select: #Number of SELECT cups. If you remove options, it will be displayed in English by default, if you want to see it in your own language, then use options and specify the name in your native language
     name: Cups
     #options:
