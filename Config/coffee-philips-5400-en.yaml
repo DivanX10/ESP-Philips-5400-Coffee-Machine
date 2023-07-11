@@ -1,5 +1,5 @@
 #This option is without a servo drive and automatic water removal from the spout of the coffee machine
-#Added one example of a coffee drink to understand where and how to add your favorite coffee drinks
+#Added some examples of a coffee drink to understand where and how to add your favorite coffee drinks
 
 substitutions:
   board_name: Coffee Philips 5400
@@ -50,7 +50,7 @@ api:
 
 
 #####################################################################################
-################################## External component ###############################
+################################## External component ################################
 external_components:
   - source:
       type: git
@@ -69,8 +69,8 @@ uart:
    rx_buffer_size: 256
 
  - id: uart_mainboard
-   rx_pin: GPIO3 #gpio 14 is recommended
-   tx_pin: GPIO1 #gpio 5 is recommended
+   rx_pin: GPIO14
+   tx_pin: GPIO5
    baud_rate: 115200
    stop_bits: 1
    data_bits: 8
@@ -78,12 +78,13 @@ uart:
    rx_buffer_size: 256
 
 
-#####################################################################################
+######################################################################################
 ################################## Connected component ##############################
 philips_series_5400:
   display_uart: uart_display
   mainboard_uart: uart_mainboard
   restore_value: true
+  debug: true #Debugging mode. If enabled, then when choosing a drink, coffee volume, milk, portion, a recipe package will be displayed
   id: philip 
   #Sensors for publishing messages in text form. In order for the sensor to be displayed, comment
   #B0_msg:
@@ -91,33 +92,55 @@ philips_series_5400:
   #B5_msg:
   #  name: Messge B5 #Coffee and milk volume counter for making coffee drinks
   #BA_msg:
-  #  name: Messge BA #Couldn't decipher
-  90_msg:
+  #  name: Messge BA #Couldn't decipher it
+  90_msg: 
     name: Messge2 90 #Coffee Drink Recipes
   #91_msg:
-  #  name: Messge3 91 #Coffee Beverage Preparation counter
+  #  name: Messge3 91 #Coffee Beverage Preparation Counter
   #93_msg:
-  #  name: Messge1 93 #Coffee Beverage Preparation counter
+  #  name: Messge1 93 #Coffee Beverage Preparation Counter
 
-  #Coffee Settings
+#Coffee Settings
   Coffee_volume: #Coffee volume NUMBER
     name: Сoffee
     mode: box #slider/box
   Milk_volume: #Milk volume NUMBER
     name: Milk
     mode: box #slider/box
-  Strength_select: #Grinding SELECT
+  Display_product: #The sensor shows which coffee drink, the volume of coffee, the volume of milk, the number of servings selected
+    name: Coffee Drink
+  Start_key: #Starting the preparation of a coffee drink
+    name: Build Coffee  
+  Strength_select: #Grinding SELECT. If you remove options, it will be displayed in English by default, if you want to see it in your own language, then use options and specify the name in your native language
     name: Grind
-  Cups_select: #Number of cups SELECT
+    #options:
+     #- "Молотый"
+     #- "Мягкий"
+     #- "Средний"
+     #- "Крепкий"
+  Cups_select: #Number of SELECT cups. If you remove options, it will be displayed in English by default, if you want to see it in your own language, then use options and specify the name in your native language
     name: Cups
-  Product_select: #Choosing a coffee drink SELECT
+    #options:
+     #- "1 чашка"
+     #- "2 чашки"
+     #- "Extra Shot"
+  Product_select: #SELECT a coffee drink. If you remove options, it will be displayed in English by default, if you want to see it in your own language, then use options and specify the name in your native language
     name: Drink
-  Display_product: #Product in operation, text sensor
-    name: Product
-  Start_key: #Start cooking button
-    name: Build Coffee
-  Test_key: #Display the selected recipe in the sensor 90
-    name: Prepare
+    #options:
+     #- "Эспрессо"
+     #- "Кофе в дорогу"
+     #- "Кофе"
+     #- "Эспрессо лунго"
+     #- "Кафе крема"
+     #- "Ристретто"
+     #- "Американо"
+     #- "Кофе с молоком"
+     #- "Кофе латте"
+     #- "Кофе с молоком в дорогу"
+     #- "Латте макиато"
+     #- "Капучино"
+     #- "Молочная пена"
+     #- "Горячая вода"
 
 
   #The sensor into which the component publishes the status digitally
@@ -128,6 +151,13 @@ philips_series_5400:
     on_value:
       then:
       - lambda: |-
+          //Status of the state of the coffee machine, on or off
+          if(x==2){
+            id(idPowerStatus).publish_state(false);
+          } else if(id(idPowerStatus).state==false){
+            id(idPowerStatus).publish_state(true);
+          }
+      
           //AA:AA:AA:B0 "System sensors"
           if(x==21){
            id(idStatus).publish_state("Choose a drink");
@@ -181,12 +211,6 @@ binary_sensor:
     name: "Power Status"
     id: idPowerStatus
     icon: mdi:power
-    lambda: |-
-      if (id(idControlSensor).state != 2) {
-        return true;
-      } else {
-        return false;
-      }
 
 #####################################################################################
 ################################## Sensor ###########################################
@@ -276,7 +300,6 @@ text_sensor:
     id: idStatus
     update_interval: never
 
-
 #####################################################################################
 ################################## Switch ######################################
 switch:
@@ -287,7 +310,6 @@ switch:
     id: idRelaySwitch
     internal: True #Hide - True \Show - False
     restore_mode: ALWAYS_OFF #Always off
-
 
 #####################################################################################
 ####################################### Button ######################################
@@ -324,24 +346,69 @@ button:
     icon: mdi:power
     on_press:
       #We send a command to turn off the coffee machine
-      - uart.write:
-          id: uart_mainboard
-          data: [0xAA, 0xAA, 0xAA, 0xFE, 0x00, 0x00, 0xC8, 0x87, 0x1B, 0x40, 0x55]
+      - lambda: |-
+          {
+            uint8_t data[]={0xFE,0,0};
+            id(philip)->send_packet_main(data,3);
+          }
 
 
 #####################################################################################
 ############################ Coffee Recipes #############################
+#Drink: Americano. Ground. Coffee: 80 ml.
   - platform: template
-    name: "Americano ground 90ml"
+    name: "Americano ground 80ml"
     icon: mdi:coffee
     on_press:
       - lambda: |-
           {
-            uint8_t data[]={0x01, 0x03, 0x00, 0x02, 0x02, 0x00, 0x28, 0x00, 0x5A, 0x00};
-            id(philip)->coffee_start(data);
-            id(philip)->coffee_start();
+            uint8_t data[]={0x01, 0x00, 0x00, 0x02, 0x03, 0x00, 0x28, 0x00, 0x28, 0x00};
+            id(philip)->prepare(data);
           }
 
+#Drink: Coffee. Grain: Maximum. Coffee: 150 ml.
+  - platform: template
+    name: "Coffee Max 150ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x00, 0x03, 0x00, 0x02, 0x02, 0x00, 0x96, 0x00, 0x00, 0x00};
+            id(philip)->prepare(data);
+          }
+
+#Drink: Cappuccino. Grain: Maximum. Coffee: 60 ml. Milk: 150 ml.
+  - platform: template
+    name: "Cappuccino Max 60/150ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x03, 0x03, 0x00, 0x02, 0x03, 0x02, 0x3C, 0x00, 0x96, 0x00};
+            id(philip)->prepare(data);
+          }
+
+#Drink: Coffee with milk. Seed. Strong. Coffee: 150 ml. Milk: 120 ml. 1 cup
+  - platform: template
+    name: "Coffee with milk Max 150/120ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x02, 0x03, 0x00, 0x02, 0x01, 0x02, 0x96, 0x00, 0x78, 0x00};
+            id(philip)->prepare(data);
+          }
+
+#Drink: Coffee with milk. Grain: Extra Shot. Coffee: 150 ml. Milk: 100 ml.
+  - platform: template
+    name: "Coffee with milk Extra Shot 150/100ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x02, 0x03, 0x02, 0x02, 0x01, 0x02, 0x96, 0x00, 0x64, 0x00};
+            id(philip)->prepare(data);
+          }
 
 #####################################################################################
 ####################################### Time #######################################
@@ -349,4 +416,3 @@ time:
   - platform: sntp
     id: sntp_time
     timezone: Europe/Moscow
-
