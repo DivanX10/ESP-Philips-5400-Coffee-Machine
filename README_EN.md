@@ -85,51 +85,50 @@ external_components:
 
 > This is purely a recommendation and notification. The decision is up to you. For this model, any changes to the drink parameter are saved to the profile, except for the guest profile. In order not to overwrite profiles, you can select a guest profile and sending recipes for cooking, the changes will not be overwritten. When you send any drink, the screen will not display the drink you selected, but the drink that you selected last time on the control panel of the coffee machine will be displayed. If you didn't touch the screen, then the first drink will be selected by default, this is espresso
 
-> We change only the protocol with the message 0x90, namely 0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00 to another, what you copy from the sensor Messge2 90, we filter out only the first 3 bytes
+If you turn on the Message 2 90 sensor, a package of coffee drink will be displayed in it. You can use this for your recipes. Just copy all bytes except the first three (example in the screenshot, highlighted in red)
+
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/b4fef99d-b5d1-46cc-bbdc-5ba6d225e16a)
 
 You can create any recipes using the table [**protocol of coffee drinks**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/raw/main/Protocol/Protocol%20of%20coffee%20drinks%20and%20programs.xlsx) in Excel
 
 ```
 button:
 
-#Sample code for sending a Max 150ml coffee drink. The recipe package is copied from the Message2 90 sensor, we filter out only the first 3 bytes
+#Sample code for sending a Max 150ml Coffee drink. The recipe package is copied from the Message2 90 sensor, we filter out only the first 3 bytes
+#Drink: Coffee. Grain: Maximum. Coffee: 150 ml.
   - platform: template
     name: "Coffee Max 150ml"
     icon: mdi:coffee
     on_press:
       - lambda: |-
           {
-            uint8_t data[]={0x00, 0x01, 0x00, 0x02, 0x02, 0x00, 0x78, 0x00, 0x00, 0x00};
-            id(philip)->coffee_start(data);
-            id(philip)->coffee_start();
+            uint8_t data[]={0x00, 0x03, 0x00, 0x02, 0x02, 0x00, 0x96, 0x00, 0x00, 0x00};
+            id(philip)->prepare(data);
           }
 
 
 #Sample code for sending a coffee drink Americano ground 90ml. The recipe package is copied from the Message2 90 sensor, we filter out only the first 3 bytes
   - platform: template
-    name: "Americano ground 90ml"
+    name: "Americano ground 80ml"
     icon: mdi:coffee
     on_press:
       - lambda: |-
           {
-            uint8_t data[]={0x01, 0x03, 0x00, 0x02, 0x02, 0x00, 0x28, 0x00, 0x5A, 0x00};
-            id(philip)->coffee_start(data);
-            id(philip)->coffee_start();
+            uint8_t data[]={0x01, 0x00, 0x00, 0x02, 0x03, 0x00, 0x28, 0x00, 0x28, 0x00};
+            id(philip)->prepare(data);
           }
 
 
-#Sample code for sending a coffee drink Coffee with milk 120/120ml. The recipe package is copied from the Message2 90 sensor, we filter out only the first 3 bytes
+#Sample code for sending a coffee drink Coffee with milk 150/120ml. The recipe package is copied from the Message2 90 sensor, we filter out only the first 3 bytes
   - platform: template
-    name: "Coffee with milk 120/120ml"
+    name: "Coffee with milk Max 150/120ml"
     icon: mdi:coffee
     on_press:
       - lambda: |-
           {
-            uint8_t data[]={0x02, 0x02, 0x00, 0x02, 0x01, 0x02, 0x78, 0x00, 0x78, 0x00};
-            id(philip)->coffee_start(data);
-            id(philip)->coffee_start();
+            uint8_t data[]={0x02, 0x03, 0x00, 0x02, 0x01, 0x02, 0x96, 0x00, 0x78, 0x00};
+            id(philip)->prepare(data);
           }
-
 
 ```
 </details>
