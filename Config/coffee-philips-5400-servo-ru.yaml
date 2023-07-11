@@ -1,8 +1,8 @@
-#Этот вариант с сервоприводом и автоматическим отводои воды от носика кофемашины
+#Этот вариант с сервоприводом и автоматическим отводом воды от носика кофемашины
 #Подключаем сервопривод MG90S Micro Servo
 #Добавлен сервопривод для овтода воды носика кофемашины
 #Добавлен выключатель автоматической работы отвода воды
-#Добавлен один пример кофейного напитка, чтобы понимать куда и как добавлять свои любимые кофейные напитки
+#Добавлены несколько примеров кофейного напитка, чтобы понимать куда и как добавлять свои любимые кофейные напитки
 
 
 substitutions:
@@ -96,8 +96,8 @@ uart:
    rx_buffer_size: 256
 
  - id: uart_mainboard
-   rx_pin: GPIO3 #Считываем данные с материнской платы (рекомендуется gpio 14)
-   tx_pin: GPIO1 #Посылаем данные в материнскую плату (рекомендуется gpio 5)
+   rx_pin: GPIO14 #GPIO3 #Считываем данные с материнской платы
+   tx_pin: GPIO5 #GPIO1 #Посылаем данные в материнскую плату
    baud_rate: 115200
    stop_bits: 1
    data_bits: 8
@@ -111,6 +111,7 @@ philips_series_5400:
   display_uart: uart_display
   mainboard_uart: uart_mainboard
   restore_value: true
+  debug: true #Режим отладки. Если включить, то при выборе напитка, объема кофе, молока, порции, будет отображаться пакет рецептов
   id: philip 
   #Cенсоры публикации сообщений в текстовом виде. Чтобы сенсор отображался, расскоментируйте
   #B0_msg:
@@ -133,19 +134,40 @@ philips_series_5400:
   Milk_volume: #Объем молока NUMBER
     name: Milk
     mode: box #slider/box
-  Strength_select: #Помол SELECT
-    name: Grind
-  Cups_select: #Количество чашек SELECT
-    name: Cups
-  Product_select: #Выбор кофейного напитка SELECT
-    name: Drink
-  Display_product: #Продукт в работе, текстовый сенсор
-    name: Product
+  Display_product: #Кофейный напиток, текстовый сенсор
+    name: Coffee Drink
   Start_key: #Запуск приготовления кнопка
     name: Build Coffee  
-  Test_key: #Отобразить выбранный рецепт в сенсоре 90 
-    name: Prepare
-
+  Strength_select: #Помол SELECT. Можно указать любое название для своего удобства
+    name: Grind
+    options:
+      - "Молотый"
+      - "Мягкий"
+      - "Средний"
+      - "Крепкий"
+  Cups_select: #Количество чашек SELECT. Можно указать любое название для своего удобства
+    name: Cups
+    options:
+      - "1 чашка"
+      - "2 чашки"
+      - "Extra Shot"
+  Product_select: #Выбор кофейного напитка SELECT. Можно указать любое название для своего удобства
+    name: Drink
+    options:
+      - "Эспрессо"
+      - "Кофе в дорогу"
+      - "Кофе"
+      - "Эспрессо лунго"
+      - "Кафе крема"
+      - "Ристретто"
+      - "Американо"
+      - "Кофе с молоком"
+      - "Кофе латте"
+      - "Кофе с молоком в дорогу"
+      - "Латте макиато"
+      - "Капучино"
+      - "Молочная пена"
+      - "Горячая вода"
 
   #Сенсор в который компонент публикует статус в цифровом виде
   state_sensor:
@@ -155,6 +177,13 @@ philips_series_5400:
     on_value:
       then:
       - lambda: |-
+          //Статус состояния кофемашины, включена или выключена
+          if(x==2){
+            id(idPowerStatus).publish_state(false);
+          } else if(id(idPowerStatus).state==false){
+            id(idPowerStatus).publish_state(true);
+          }
+
           //AA:AA:AA:B0 "Системные сенсоры"
           if(x==21){
            id(idStatus).publish_state("Выберите напиток");
@@ -224,12 +253,6 @@ binary_sensor:
     name: "Power Status"
     id: idPowerStatus
     icon: mdi:power
-    lambda: |-
-      if (id(idControlSensor).state != 2) {
-        return true;
-      } else {
-        return false;
-      }
 
 #####################################################################################
 ################################## Сенсор ###########################################
@@ -351,7 +374,7 @@ script:
           then:  
             - switch.turn_off: idServoControlSwitch #Перекрываем носик кофемашины отводом воды
 
-#Если выключатель "Automatic Water Drain" включен, то отвод воды будет убираться после того как пройдет этап промывки и будет предложено Выбрать напиток, если кофемашина #выключена, то отвод воды будет в положении у носика
+#Если выключатель "Automatic Water Drain" включен, то отвод воды будет убираться после того как пройдет этап промывки и будет предложено Выбрать напиток, если кофемашина выключена, то отвод воды будет в положении у носика
   - id: script_auto_water_drain
     then:
       - if:
@@ -473,23 +496,69 @@ button:
     icon: mdi:power
     on_press:
       #Посылаем команду для выключения кофемашины 
-      - uart.write:
-          id: uart_mainboard
-          data: [0xAA, 0xAA, 0xAA, 0xFE, 0x00, 0x00, 0xC8, 0x87, 0x1B, 0x40, 0x55]
+      - lambda: |-
+          {
+            uint8_t data[]={0xFE,0,0};
+            id(philip)->send_packet_main(data,3);
+          }
 
 
 #####################################################################################
 ############################ Рецепты приготовления кофе #############################
   - platform: template
-    name: "Американо молотый 90ml"
+    name: "Американо молотый 80ml"
     icon: mdi:coffee
     on_press:
       - lambda: |-
           {
-            uint8_t data[]={0x01, 0x03, 0x00, 0x02, 0x02, 0x00, 0x28, 0x00, 0x5A, 0x00};
-            id(philip)->coffee_start(data);
-            id(philip)->coffee_start();
+            uint8_t data[]={0x01, 0x00, 0x00, 0x02, 0x03, 0x00, 0x28, 0x00, 0x28, 0x00};
+            id(philip)->prepare(data);
           }
+
+#Напиток: Каппучино. Зерно: Максимум. Кофе: 60 мл. Молоко: 150 мл.
+  - platform: template
+    name: "Кофе Max 150ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x00, 0x03, 0x00, 0x02, 0x02, 0x00, 0x96, 0x00, 0x00, 0x00};
+            id(philip)->prepare(data);
+          }
+
+#Напиток: Каппучино. Зерно: Максимум. Кофе: 60 мл. Молоко: 150 мл.
+  - platform: template
+    name: "Капучино Max 60/150ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x03, 0x03, 0x00, 0x02, 0x03, 0x02, 0x3C, 0x00, 0x96, 0x00};
+            id(philip)->prepare(data);
+          }
+
+#Напиток: Кофе с молоком. Зерно. Крепкий. Кофе: 150 мл. Молоко: 120 мл. 1 чашка
+  - platform: template
+    name: "Кофе с молоком Max 150/120ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x02, 0x03, 0x00, 0x02, 0x01, 0x02, 0x96, 0x00, 0x78, 0x00};
+            id(philip)->prepare(data);
+          }
+
+#Напиток: Кофе с молоком. Зерно: Extra Shot. Кофе: 150 мл. Молоко: 100 мл.
+  - platform: template
+    name: "Кофе с молоком Extra Shot 150/100ml"
+    icon: mdi:coffee
+    on_press:
+      - lambda: |-
+          {
+            uint8_t data[]={0x02, 0x03, 0x02, 0x02, 0x01, 0x02, 0x96, 0x00, 0x64, 0x00};
+            id(philip)->prepare(data);
+          }
+
 
 
 #####################################################################################
