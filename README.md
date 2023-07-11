@@ -146,7 +146,7 @@ button:
 
 
 <details>
-  <summary>Снимаем панель управления и встраиваем ESP</summary>
+  <summary>Встраиваем ESP</summary>
   
 
 Снимаем панель управления. Снимается не сложно. Чуть тянем на себя, в эти точки вставляем пластиковую лопатку и вынимаем панель
@@ -171,14 +171,14 @@ button:
 
 ### Схема с подключением реле 5В (KY-019)
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/acaaa718-ef3d-48ee-93b8-5030bee1439f)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/26c08fe2-4f6e-4091-8a43-2accfa30202f)
+
 
 ***
 
 ### Cхема с подключением оптопары PC817C
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/db0e5a04-c1ac-440f-a9f2-4d47711a066d)
-
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/078c2dd7-b1b1-457a-beca-5363308cc4e7)
 
 </details>
 
