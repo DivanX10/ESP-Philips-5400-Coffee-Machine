@@ -136,7 +136,7 @@ button:
 
 
 <details>
-  <summary>Remove the control panel and embed ESP</summary>
+  <summary>Embedding ESP</summary>
   
 
 Remove the control panel. It is not difficult to remove. We pull a little on ourselves, insert a plastic spatula into these points and take out the panel
@@ -155,20 +155,21 @@ We need access to an 8-core wire that needs to be connected to the ESP
 
 ### General connection diagram without relays and optocouplers. Just connect the ESP32 to the coffee machine
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/b24a0b0f-3e35-4f0b-9732-286cdf9c7fc7)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/6dde0d4b-8f04-4954-a36b-3b61f4ecc263)
 
 
 ***
 
 ### Circuit with connection of a 5V relay (KY-019)
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/acaaa718-ef3d-48ee-93b8-5030bee1439f)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/eb48ac76-0167-478c-a466-63a20d8332ee)
+
 
 ***
 
 ### PC817C optocoupler connection diagram
 
-![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/db0e5a04-c1ac-440f-a9f2-4d47711a066d)
+![image](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/assets/64090632/6c79a9bd-295a-4396-9e55-329af4cb2479)
 
 
 </details>
