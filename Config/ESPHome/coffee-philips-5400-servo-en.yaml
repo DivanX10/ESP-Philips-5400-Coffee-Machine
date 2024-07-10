@@ -17,7 +17,7 @@ esp32:
   board: esp32dev
   framework:
     type: arduino
-    version: recommended
+    version: 2.0.15
 
 #Wi-Fi credentials for connecting the board to the home network
 wifi:
@@ -45,7 +45,8 @@ logger:
 
 #Enable OTA
 ota:
-  password: "esphome"
+  - platform: esphome
+    password: "esphome"
 
 #Enable Home Assistant API
 #Encryption turned off to reduce the load on the ESP
