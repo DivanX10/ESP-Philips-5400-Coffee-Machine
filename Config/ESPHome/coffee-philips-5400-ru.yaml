@@ -15,7 +15,7 @@ esp32:
   board: esp32dev
   framework:
     type: arduino
-    version: recommended
+    version: 2.0.15
 
 #Учетные данные Wi-Fi для подключения платы к домашней сети
 wifi:
@@ -43,7 +43,8 @@ logger:
 
 #Enable OTA
 ota:
-  password: "esphome"
+  - platform: esphome
+    password: "esphome"
 
 #Enable Home Assistant API
 #Шифрование выключил для снижения нагрузки на ESP
