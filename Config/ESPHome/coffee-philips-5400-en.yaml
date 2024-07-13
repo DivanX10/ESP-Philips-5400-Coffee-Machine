@@ -42,8 +42,7 @@ logger:
 
 #Enable OTA
 ota:
-  - platform: esphome
-    password: "esphome"
+  password: "esphome"
 
 #Enable Home Assistant API
 #Encryption turned off to reduce the load on the ESP
