@@ -29,18 +29,18 @@ esp32:
  * Download the addon ESPHome 2023.5.0 (17.05.2023) [here](https://github.com/esphome/home-assistant-addon/releases/tag/2023.5.0)
  * Download the addon ESPHome 2023.6.0 (22.06.2023) [here](https://github.com/esphome/home-assistant-addon/releases/tag/2023.6.0)
 2) Unzip the archive to any location so that it can be copied to Home Assistant
-3) Copy the **esphome * * folder from the archive to the **addons**network folder. If the Home Assistant network folders don't work, then install the **Samba share**addon. The **Samba share * * addon is available by default in the addon store, but if the **Samba share** addon is not available for some reason, then enable advanced mode, and then you will see the **Samba share** addon in the addon store, and if this addon is still not available, then you can install the **Samba share * * addon using this [link](https://github.com/home-assistant/addons/tree/master/samba)
+3) Copy the **esphome** folder from the archive to the **addons** network folder. If the Home Assistant network folders don't work, then install the **Samba share** addon. The **Samba share** addon is available by default in the addon store, but if the **Samba share** addon is not available for some reason, then enable advanced mode, and then you will see the **Samba share** addon in the addon store, and if this addon is still not available, then you can install the **Samba share** addon using this [link](https://github.com/home-assistant/addons/tree/master/samba)
 
  * How do I enable Advanced Mode?   
 ![image](https://github.com/user-attachments/assets/6a9cbe3c-e43a-407b-843d-d4babc960446)
 
 
- * Where can I download the * * esphome * * file?
+ * Where can I download the **esphome** file?
 
-In the archive * * home-assistant-addon-xx.xx.xxxx** we are interested in the folder **esphome**
+In the archive **home-assistant-addon-xx.xx.xxxx** we are interested in the folder **esphome**
 ![image](https://github.com/user-attachments/assets/4d96e995-13ae-44bc-8bff-d169037fed94)
 
-Copy the **esphome * * folder to the network folder * * addons**
+Copy the **esphome** folder to the network folder **addons**
 ![image](https://github.com/user-attachments/assets/181f986a-63e0-47c2-bdbe-1d4da5c700e2)
 ![image](https://github.com/user-attachments/assets/134eb78d-8e72-4233-9981-ad74c2360942)
 
