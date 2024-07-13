@@ -18,7 +18,7 @@ esp32:
   board: esp32dev
   framework:
     type: arduino
-    version: 2.0.15
+    version: 2.0.9 #Строго собирать в ESPHome версии 2023.5.0 или 2023.6.0
 
 #Учетные данные Wi-Fi для подключения платы к домашней сети
 wifi:
@@ -44,10 +44,9 @@ logger:
   level: ERROR #NONE
   baud_rate: 0
 
-#Enable OTA
+#Обновление по воздуху (OTA)
 ota:
-  - platform: esphome
-    password: "esphome"
+  password: "esphome"
 
 #Enable Home Assistant API
 #Шифрование выключил для снижения нагрузки на ESP
