@@ -32,7 +32,8 @@ esp32:
 3) Copy the **esphome * * folder from the archive to the **addons**network folder. If the Home Assistant network folders don't work, then install the **Samba share**addon. The **Samba share * * addon is available by default in the addon store, but if the **Samba share** addon is not available for some reason, then enable advanced mode, and then you will see the **Samba share** addon in the addon store, and if this addon is still not available, then you can install the **Samba share * * addon using this [link](https://github.com/home-assistant/addons/tree/master/samba)
 
  * How do I enable Advanced Mode?   
-![image](https://github.com/user-attachments/assets/0efaf883-cce8-4e3d-9ad4-0ae38dad29aa)
+![image](https://github.com/user-attachments/assets/6a9cbe3c-e43a-407b-843d-d4babc960446)
+
 
  * Where can I download the * * esphome * * file?
 
