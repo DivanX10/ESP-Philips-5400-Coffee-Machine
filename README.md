@@ -4,6 +4,45 @@
 
 <img src="https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/blob/main/Image/Coffee%20machine%20philips%205400.jpg" width=50%>
 
+***
+
+Важно! Собирать прошивку строго в ESPHome версии 2023.5.0 или 2023.6.0 и не позднее, а также в конфигурации указывать конкретную версию arduino 2.0.9. Если соберете прошивку в последней версии ESPHome и будете использовать arduino recommended, то кофемашина будет сбоить, будет работать некорректно. Нужно переписывать код. Если имеете желание переписать код под новую версию ESPHome и поделитесь, то буду вам благодарен за участие. Спасибо. 
+
+```
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+    version: 2.0.9
+```
+<details>
+  <summary>Как установить любую версию аддона ESPHome?</summary>
+
+1) Скачать нужную версию аддона ESPHome можно по этой ссылке https://github.com/esphome/home-assistant-addon.
+ * Скачать аддон ESPHome 2023.5.0 (17.05.2023) [здесь](https://github.com/esphome/home-assistant-addon/releases/tag/2023.5.0)
+ * Скачать аддон ESPHome 2023.6.0 (22.06.2023) [здесь](https://github.com/esphome/home-assistant-addon/releases/tag/2023.6.0)
+2) Распаковать архив в любое место чтобы можно было скопировать в Home Assistant
+3) Копируем папку **esphome** из архива в сетевую папку **addons**. Если сетевые папки Home Assistant не работают, то установить аддон **Samba share**. Аддон **Samba share** по умолчанию доступен в магазине аддонов, но если аддона **Samba share** по каким-то причинам нет, то включите расширенный режим и тогда в магазине аддонов вы увидите аддон **Samba share**, а если этого аддона по прежнему нет, то можете установить аддон **Samba share** по этой [ссылке](https://github.com/home-assistant/addons/tree/master/samba)
+
+ * Как включить Расширенный режим?   
+![image](https://github.com/user-attachments/assets/0efaf883-cce8-4e3d-9ad4-0ae38dad29aa)
+
+ * Куда скачать файл **esphome**?
+
+В архиве **home-assistant-addon-xx.xx.xxxx** нас интересует папка **esphome**
+![image](https://github.com/user-attachments/assets/4d96e995-13ae-44bc-8bff-d169037fed94)
+
+Папку **esphome** копируем в сетевую папку **addons**
+![image](https://github.com/user-attachments/assets/181f986a-63e0-47c2-bdbe-1d4da5c700e2)
+![image](https://github.com/user-attachments/assets/134eb78d-8e72-4233-9981-ad74c2360942)
+
+4) Перезагружаем Home Assistant
+5) Заходим в магазин аддонов и ищем локальную версию аддона ESPHome. Смотрим на версию, должна быть версия 2023.5.0 или 2023.6.0, в зависимости какой архив мы скачали
+![image](https://github.com/user-attachments/assets/e2447a8c-62f2-47ae-b113-de76d73b4a92)
+
+8) Если локальная версия аддона ESPHome есть и версия 2023.5.0 или 2023.6.0, то ставим
+![image](https://github.com/user-attachments/assets/f57fc227-9d3d-4e6d-9a8e-6907508006b7)
+</details>
 
 ***
 
