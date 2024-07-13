@@ -18,7 +18,7 @@ esp32:
 <details>
   <summary>Как установить любую версию аддона ESPHome?</summary>
 
-1) Скачать нужную версию аддона ESPHome можно по этой ссылке https://github.com/esphome/home-assistant-addon.
+1) Скачать нужную версию аддона ESPHome можно по этой [ссылке](https://github.com/esphome/home-assistant-addon)
  * Скачать аддон ESPHome 2023.5.0 (17.05.2023) [здесь](https://github.com/esphome/home-assistant-addon/releases/tag/2023.5.0)
  * Скачать аддон ESPHome 2023.6.0 (22.06.2023) [здесь](https://github.com/esphome/home-assistant-addon/releases/tag/2023.6.0)
 2) Распаковать архив в любое место чтобы можно было скопировать в Home Assistant
