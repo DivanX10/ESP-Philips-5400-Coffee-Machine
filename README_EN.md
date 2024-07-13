@@ -10,6 +10,47 @@ All materials of this project (firmware, schematics, 3D models, etc.) are provid
 
 > Working versions of the code for controlling the coffee machine can be taken [**here**](https://github.com/DivanX10/ESP-Philips-5400-Coffee-Machine/tree/main/Config/ESPHome) (read the comments in the code)
 
+
+***
+
+Important! To assemble the firmware strictly in ESP Home version 2023.5.0 or 2023.6.0 and no later, as well as specify a specific version of arduino 2.0.9 in the configuration. If you build the firmware in the latest version of ESP Home and use arduino recommended, the coffee machine will not work correctly. We need to rewrite the code. If you want to rewrite the code for the new version of ESPHome and share it, then I will be grateful for your participation. Thank you.
+
+```
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+    version: 2.0.9
+```
+<details>
+  <summary>How do I install any version of the ESPHome addon?</summary>
+
+1) You can download the required version of the ESPHome addon at this [link](https://github.com/esphome/home-assistant-addon)
+ * Download the addon ESPHome 2023.5.0 (17.05.2023) [here](https://github.com/esphome/home-assistant-addon/releases/tag/2023.5.0)
+ * Download the addon ESPHome 2023.6.0 (22.06.2023) [here](https://github.com/esphome/home-assistant-addon/releases/tag/2023.6.0)
+2) Unzip the archive to any location so that it can be copied to Home Assistant
+3) Copy the **esphome * * folder from the archive to the **addons**network folder. If the Home Assistant network folders don't work, then install the **Samba share**addon. The **Samba share * * addon is available by default in the addon store, but if the **Samba share** addon is not available for some reason, then enable advanced mode, and then you will see the **Samba share** addon in the addon store, and if this addon is still not available, then you can install the **Samba share * * addon using this [link](https://github.com/home-assistant/addons/tree/master/samba)
+
+ * How do I enable Advanced Mode?   
+![image](https://github.com/user-attachments/assets/0efaf883-cce8-4e3d-9ad4-0ae38dad29aa)
+
+ * Where can I download the * * esphome * * file?
+
+In the archive * * home-assistant-addon-xx.xx.xxxx** we are interested in the folder **esphome**
+![image](https://github.com/user-attachments/assets/4d96e995-13ae-44bc-8bff-d169037fed94)
+
+Copy the **esphome * * folder to the network folder * * addons**
+![image](https://github.com/user-attachments/assets/181f986a-63e0-47c2-bdbe-1d4da5c700e2)
+![image](https://github.com/user-attachments/assets/134eb78d-8e72-4233-9981-ad74c2360942)
+
+4) Restart Home Assistant
+5) Go to the addon store and look for the local version of the ESPHome addon. We are looking at the version, it should be version 2023.5.0 or 2023.6.0, depending on which archive we downloaded
+![image](https://github.com/user-attachments/assets/e2447a8c-62f2-47ae-b113-de76d73b4a92)
+
+8) If the local version of the ESPHome addon is also version 2023.5.0 or 2023.6.0, then set
+![image](https://github.com/user-attachments/assets/f57fc227-9d3d-4e6d-9a8e-6907508006b7)
+</details>
+
 ***
 
 <details>
