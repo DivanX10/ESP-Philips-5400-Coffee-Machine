@@ -14,7 +14,7 @@ esp32:
   board: esp32dev
   framework:
     type: arduino
-    version: 2.0.15
+    version: 2.0.9
 
 #Wi-Fi credentials for connecting the board to the home network
 wifi:
